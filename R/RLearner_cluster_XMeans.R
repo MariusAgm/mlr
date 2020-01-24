@@ -21,15 +21,16 @@ makeRLearner.cluster.XMeans = function() {
       makeUntypedLearnerParam(id = "Y"),
       makeLogicalLearnerParam(id = "output-debug-info", default = FALSE, tunable = FALSE)
     ),
-    properties = c("numerics"),
+    properties = "numerics",
     name = "XMeans (k-means with automatic determination of k)",
     short.name = "xmeans",
-    note = "You may have to install the XMeans Weka package: `WPM('install-package', 'XMeans')`."
+    note = "You may have to install the XMeans Weka package: `WPM('install-package', 'XMeans')`.",
+    callees = c("XMeans", "Weka_control")
   )
 }
 
 #' @export
-trainLearner.cluster.XMeans = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.cluster.XMeans = function(.learner, .task, .subset, .weights = NULL, ...) {
   ctrl = RWeka::Weka_control(...)
   RWeka::XMeans(getTaskData(.task, .subset), control = ctrl)
 }
@@ -39,4 +40,3 @@ predictLearner.cluster.XMeans = function(.learner, .model, .newdata, ...) {
   # XMeans returns cluster indices (i.e. starting from 0, which some tools don't like
   as.integer(predict(.model$learner.model, .newdata, ...)) + 1L
 }
-

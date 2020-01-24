@@ -1,8 +1,7 @@
 context("classif_sparseLDA")
 
 test_that("classif_sparseLDA", {
-  # FIXME: maybe again broken NAMESPACE / import in package, if we dont use !, solvebeta is not found
-  requirePackagesOrSkip(c("!sparseLDA", "MASS", "!elasticnet"))
+  requirePackagesOrSkip(c("sparseLDA", "MASS", "elasticnet"))
 
   parset.list = list(
     list(),
@@ -16,7 +15,7 @@ test_that("classif_sparseLDA", {
   old.predicts.list = list()
   old.probs.list = list()
 
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     target.col = which(colnames(multiclass.train) == multiclass.target)
     X = multiclass.train[, -target.col]
@@ -24,7 +23,6 @@ test_that("classif_sparseLDA", {
     lvls = unique(as.character(y))
     y = sapply(lvls, function(lvl) as.integer(as.character(y) == lvl))
     pars = c(list(x = X, y = y), parset)
-    set.seed(getOption("mlr.debug.seed"))
     m = do.call(sparseLDA::sda, pars)
     old.predicts.list[[i]] = sparseLDA:::predict.sda(m,
       newdata = subset(multiclass.test, select = m$varNames))$class
@@ -34,6 +32,6 @@ test_that("classif_sparseLDA", {
 
   testSimpleParsets("classif.sparseLDA", multiclass.df, multiclass.target,
     multiclass.train.inds, old.predicts.list, parset.list)
-  testProbParsets  ("classif.sparseLDA", multiclass.df, multiclass.target,
+  testProbParsets("classif.sparseLDA", multiclass.df, multiclass.target,
     multiclass.train.inds, old.probs.list, parset.list)
 })

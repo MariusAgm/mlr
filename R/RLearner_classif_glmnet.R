@@ -31,35 +31,46 @@ makeRLearner.classif.glmnet = function() {
       makeNumericLearnerParam(id = "exmx", default = 250.0),
       makeNumericLearnerParam(id = "prec", default = 1e-10),
       makeIntegerLearnerParam(id = "mxit", default = 100L, lower = 1L),
-      makeLogicalLearnerParam(id = "factory", default = FALSE)
+      makeUntypedLearnerParam(id = "offset", default = NULL),
+      makeDiscreteLearnerParam(id = "type.gaussian", values = c("covariance", "naive"), requires = quote(family == "gaussian")),
+      makeLogicalLearnerParam(id = "relax", default = FALSE)
     ),
     properties = c("numerics", "factors", "prob", "twoclass", "multiclass", "weights"),
     par.vals = list(s = 0.01),
     name = "GLM with Lasso or Elasticnet Regularization",
     short.name = "glmnet",
-    note = "The family parameter is set to `binomial` for two-class problems and to `multinomial` otherwise.
+    note =
+      "The family parameter is set to `binomial` for two-class problems and to `multinomial` otherwise.
       Factors automatically get converted to dummy columns, ordered factors to integer.
       Parameter `s` (value of the regularization parameter used for predictions) is set to `0.1` by default,
-      but needs to be tuned by the user."
+      but needs to be tuned by the user.
+      glmnet uses a global control object for its parameters. mlr resets all control parameters to their defaults
+      before setting the specified parameters and after training.
+      If you are setting glmnet.control parameters through glmnet.control,
+      you need to save and re-set them after running the glmnet learner.",
+    callees = c("glmnet", "glmnet.control", "predict.glmnet")
   )
 }
 
 #' @export
 trainLearner.classif.glmnet = function(.learner, .task, .subset, .weights = NULL, ...) {
+
   d = getTaskData(.task, .subset, target.extra = TRUE, recode.target = "drop.levels")
   info = getFixDataInfo(d$data, factors.to.dummies = TRUE, ordered.to.int = TRUE)
   args = c(list(x = as.matrix(fixDataForLearner(d$data, info)), y = d$target), list(...))
   rm(d)
-  if (!is.null(.weights))
+  if (!is.null(.weights)) {
     args$weights = .weights
+  }
 
-  td = getTaskDescription(.task)
+  td = getTaskDesc(.task)
   args$family = ifelse(length(td$class.levels) == 2L, "binomial", "multinomial")
 
+  glmnet::glmnet.control(factory = TRUE)
   saved.ctrl = glmnet::glmnet.control()
   is.ctrl.arg = names(args) %in% names(saved.ctrl)
   if (any(is.ctrl.arg)) {
-    on.exit(do.call(glmnet::glmnet.control, saved.ctrl))
+    on.exit(glmnet::glmnet.control(factory = TRUE))
     do.call(glmnet::glmnet.control, args[is.ctrl.arg])
     args = args[!is.ctrl.arg]
   }
@@ -77,7 +88,7 @@ predictLearner.classif.glmnet = function(.learner, .model, .newdata, ...) {
     if (length(td$class.levels) == 2L) {
       p = setColNames(cbind(1 - p, p), td$class.levels)
     } else {
-      p = p[,,1]
+      p = array(c(p), dim(p)[-3], dimnames = dimnames(p)[1:2])
     }
   } else {
     p = drop(predict(.model$learner.model, newx = .newdata, type = "class", ...))

@@ -6,8 +6,7 @@ makeRLearner.surv.cvglmnet = function() {
     par.set = makeParamSet(
       makeNumericLearnerParam(id = "alpha", default = 1, lower = 0, upper = 1),
       makeIntegerLearnerParam(id = "nfolds", default = 10L, lower = 3L),
-      makeDiscreteLearnerParam(id = "type.measure", values = c("deviance"), default = "deviance"),
-      makeLogicalLearnerParam(id = "exact", default = FALSE, when = "predict"),
+      makeDiscreteLearnerParam(id = "type.measure", values = "deviance", default = "deviance"),
       makeLogicalLearnerParam(id = "grouped", default = TRUE),
       makeDiscreteLearnerParam(id = "s", values = c("lambda.1se", "lambda.min"), default = "lambda.1se", when = "predict"),
       makeIntegerLearnerParam(id = "nlambda", default = 100L, lower = 1L),
@@ -31,23 +30,30 @@ makeRLearner.surv.cvglmnet = function() {
       makeNumericLearnerParam(id = "exmx", default = 250.0),
       makeNumericLearnerParam(id = "prec", default = 1e-10),
       makeIntegerLearnerParam(id = "mxit", default = 100, lower = 1),
-      makeLogicalLearnerParam(id = "factory", default = FALSE)
+      makeLogicalLearnerParam(id = "factory", default = FALSE),
+      makeUntypedLearnerParam(id = "offset", default = NULL),
+      makeDiscreteLearnerParam(id = "type.gaussian", values = c("covariance", "naive"), requires = quote(family == "gaussian")),
+      makeNumericVectorLearnerParam(id = "gamma", lower = 0, upper = 1, requires = quote(relax == TRUE)),
+      makeLogicalLearnerParam(id = "relax", default = FALSE)
     ),
-    properties = c("numerics", "factors", "ordered", "weights", "rcens"),
+    properties = c("numerics", "factors", "ordered", "weights"),
     name = "GLM with Regularization (Cross Validated Lambda)",
     short.name = "cvglmnet",
-    note = "Factors automatically get converted to dummy columns, ordered factors to integer."
+    note = "Factors automatically get converted to dummy columns, ordered factors to integer.",
+    callees = c("cv.glmnet", "glmnet", "glmnet.control", "predict.glmnet")
   )
 }
 
 #' @export
-trainLearner.surv.cvglmnet = function(.learner, .task, .subset, .weights = NULL,  ...) {
-  d = getTaskData(.task, subset = .subset, target.extra = TRUE, recode.target = "rcens")
+trainLearner.surv.cvglmnet = function(.learner, .task, .subset, .weights = NULL, ...) {
+
+  d = getTaskData(.task, subset = .subset, target.extra = TRUE, recode.target = "surv")
   info = getFixDataInfo(d$data, factors.to.dummies = TRUE, ordered.to.int = TRUE)
   args = c(list(x = as.matrix(fixDataForLearner(d$data, info)), y = d$target, family = "cox", parallel = FALSE), list(...))
   rm(d)
-  if (!is.null(.weights))
+  if (!is.null(.weights)) {
     args$weights = .weights
+  }
 
   saved.ctrl = glmnet::glmnet.control()
   is.ctrl.arg = names(args) %in% names(saved.ctrl)

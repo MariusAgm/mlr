@@ -7,21 +7,24 @@
 getFilteredFeatures(model)
 }
 \arguments{
-\item{model}{[\code{\link{WrappedModel}}]\cr
-Trained Model created with \code{\link{makeFilterWrapper}}.}
+\item{model}{(\link{WrappedModel})\cr
+Trained Model created with \link{makeFilterWrapper}.}
 }
 \value{
-[\code{character}].
+(\link{character}).
 }
 \description{
 Returns the filtered features.
 }
 \seealso{
-Other filter: \code{\link{filterFeatures}},
-  \code{\link{generateFilterValuesData}},
-  \code{\link{getFilterValues}},
-  \code{\link{makeFilterWrapper}},
-  \code{\link{plotFilterValuesGGVIS}},
-  \code{\link{plotFilterValues}}
+Other filter: 
+\code{\link{filterFeatures}()},
+\code{\link{generateFilterValuesData}()},
+\code{\link{listFilterEnsembleMethods}()},
+\code{\link{listFilterMethods}()},
+\code{\link{makeFilterEnsemble}()},
+\code{\link{makeFilterWrapper}()},
+\code{\link{makeFilter}()},
+\code{\link{plotFilterValues}()}
 }
-
+\concept{filter}

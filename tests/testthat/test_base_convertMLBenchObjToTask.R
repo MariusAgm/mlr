@@ -1,16 +1,18 @@
 context("convertMLBenchObjToTask")
 
 test_that("convertMLbenchObjToTask", {
-  requirePackages("!mlbench")
+
+  requirePackagesOrSkip("mlbench")
   # get all mlbench.* functions, 1spiral does not work
   fs = ls("package:mlbench", pattern = "mlbench")
   n = 77L
-  for (f in setdiff(fs, c("mlbench.1spiral"))) {
+  for (f in setdiff(fs, "mlbench.1spiral")) {
     task = convertMLBenchObjToTask(f, n = n)
     expect_is(task, "Task")
     # for some, n is not properly respected in mlbench
-    if (f %nin% c("mlbench.corners", "mlbench.hypercube", "mlbench.simplex"))
+    if (f %nin% c("mlbench.corners", "mlbench.hypercube", "mlbench.simplex")) {
       expect_equal(getTaskSize(task), n)
+    }
   }
 
   # get all mlbench datasets, HouseVotes84 and Ozone have NAs in target col

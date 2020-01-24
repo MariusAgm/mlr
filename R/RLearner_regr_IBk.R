@@ -15,12 +15,13 @@ makeRLearner.regr.IBk = function() {
     ),
     properties = c("numerics", "factors"),
     name = "K-Nearest Neighbours",
-    short.name = "ibk"
+    short.name = "ibk",
+    callees = c("IBk", "Weka_control")
   )
 }
 
 #' @export
-trainLearner.regr.IBk = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.IBk = function(.learner, .task, .subset, .weights = NULL, ...) {
   ctrl = RWeka::Weka_control(...)
   RWeka::IBk(getTaskFormula(.task), data = getTaskData(.task, .subset), control = ctrl, na.action = na.pass)
 }

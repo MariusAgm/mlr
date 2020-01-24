@@ -22,12 +22,13 @@ makeRLearner.classif.J48 = function() {
     properties = c("twoclass", "multiclass", "missings", "numerics", "factors", "prob"),
     name = "J48 Decision Trees",
     short.name = "j48",
-    note = "NAs are directly passed to WEKA with `na.action = na.pass`."
+    note = "NAs are directly passed to WEKA with `na.action = na.pass`.",
+    callees = c("J48", "Weka_control")
   )
 }
 
 #' @export
-trainLearner.classif.J48 = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.classif.J48 = function(.learner, .task, .subset, .weights = NULL, ...) {
   ctrl = RWeka::Weka_control(..., Q = as.integer(runif(1, min = -.Machine$integer.max, max = .Machine$integer.max)))
   f = getTaskFormula(.task)
   RWeka::J48(f, data = getTaskData(.task, .subset), control = ctrl, na.action = na.pass)

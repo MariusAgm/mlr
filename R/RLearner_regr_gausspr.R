@@ -28,20 +28,22 @@ makeRLearner.regr.gausspr = function() {
     name = "Gaussian Processes",
     short.name = "gausspr",
     note = "Kernel parameters have to be passed directly and not by using the `kpar` list in `gausspr`.
-    Note that `fit` has been set to `FALSE` by default for speed."
+    Note that `fit` has been set to `FALSE` by default for speed.",
+    callees = "gausspr"
   )
 }
 
 #' @export
 trainLearner.regr.gausspr = function(.learner, .task, .subset, .weights = NULL,
-  degree, offset, scale, sigma, order, length, lambda, normalized,  ...) {
+  degree, offset, scale, sigma, order, length, lambda, normalized, ...) {
   kpar = learnerArgsToControl(list, degree, offset, scale, sigma, order, length, lambda, normalized)
   f = getTaskFormula(.task)
   vm = .learner$predict.type == "se"
-  if (base::length(kpar) > 0L)
+  if (base::length(kpar) > 0L) {
     kernlab::gausspr(f, data = getTaskData(.task, .subset), kpar = kpar, variance.model = vm, type = "regression", ...)
-  else
+  } else {
     kernlab::gausspr(f, data = getTaskData(.task, .subset), variance.model = vm, type = "regression", ...)
+  }
 }
 
 #' @export
@@ -51,6 +53,6 @@ predictLearner.regr.gausspr = function(.learner, .model, .newdata, ...) {
   } else {
     pred = matrix(kernlab::predict(.model$learner.model, newdata = .newdata, ...))
     pred.se = matrix(kernlab::predict(.model$learner.model, newdata = .newdata, type = "sdeviation", ...))
-    cbind(pred,pred.se)
+    cbind(pred, pred.se)
   }
 }

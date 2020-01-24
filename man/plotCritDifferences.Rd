@@ -7,16 +7,16 @@
 plotCritDifferences(obj, baseline = NULL, pretty.names = TRUE)
 }
 \arguments{
-\item{obj}{[\code{critDifferencesData}]
+\item{obj}{([critDifferencesData])
 Result of \link{generateCritDifferencesData} function.}
 
-\item{baseline}{[\code{character(1)}]: [\code{learner.id}] \cr
+\item{baseline}{(`character(1)`): ([learner.id]) \cr
 Overwrites baseline from \link{generateCritDifferencesData}!\cr
-Select a [\code{learner.id} as baseline for the critical difference
+Select a ([learner.id` as baseline for the critical difference
 diagram, the critical difference will be positioned arround this learner.
 Defaults to best performing algorithm.}
 
-\item{pretty.names}{[\code{logical{1}}]\cr
+\item{pretty.names}{(\code{logical(1)})\cr
 Whether to use the short name of the learner instead of its ID in labels. Defaults to \code{TRUE}.}
 }
 \value{
@@ -38,40 +38,44 @@ Janez Demsar, Statistical Comparisons of Classifiers over Multiple Data Sets,
 JMLR, 2006
 }
 \seealso{
-Other benchmark: \code{\link{BenchmarkResult}},
-  \code{\link{benchmark}},
-  \code{\link{convertBMRToRankMatrix}},
-  \code{\link{friedmanPostHocTestBMR}},
-  \code{\link{friedmanTestBMR}},
-  \code{\link{generateCritDifferencesData}},
-  \code{\link{getBMRAggrPerformances}},
-  \code{\link{getBMRFeatSelResults}},
-  \code{\link{getBMRFilteredFeatures}},
-  \code{\link{getBMRLearnerIds}},
-  \code{\link{getBMRLearnerShortNames}},
-  \code{\link{getBMRLearners}},
-  \code{\link{getBMRMeasureIds}},
-  \code{\link{getBMRMeasures}}, \code{\link{getBMRModels}},
-  \code{\link{getBMRPerformances}},
-  \code{\link{getBMRPredictions}},
-  \code{\link{getBMRTaskDescriptions}},
-  \code{\link{getBMRTaskIds}},
-  \code{\link{getBMRTuneResults}},
-  \code{\link{plotBMRBoxplots}},
-  \code{\link{plotBMRRanksAsBarChart}},
-  \code{\link{plotBMRSummary}}
+Other plot: 
+\code{\link{createSpatialResamplingPlots}()},
+\code{\link{plotBMRBoxplots}()},
+\code{\link{plotBMRRanksAsBarChart}()},
+\code{\link{plotBMRSummary}()},
+\code{\link{plotCalibration}()},
+\code{\link{plotLearningCurve}()},
+\code{\link{plotPartialDependence}()},
+\code{\link{plotROCCurves}()},
+\code{\link{plotResiduals}()},
+\code{\link{plotThreshVsPerf}()}
 
-Other plot: \code{\link{plotBMRBoxplots}},
-  \code{\link{plotBMRRanksAsBarChart}},
-  \code{\link{plotBMRSummary}},
-  \code{\link{plotCalibration}},
-  \code{\link{plotFilterValuesGGVIS}},
-  \code{\link{plotLearningCurveGGVIS}},
-  \code{\link{plotLearningCurve}},
-  \code{\link{plotPartialDependenceGGVIS}},
-  \code{\link{plotPartialDependence}},
-  \code{\link{plotROCCurves}}, \code{\link{plotResiduals}},
-  \code{\link{plotThreshVsPerfGGVIS}},
-  \code{\link{plotThreshVsPerf}}
+Other benchmark: 
+\code{\link{BenchmarkResult}},
+\code{\link{batchmark}()},
+\code{\link{benchmark}()},
+\code{\link{convertBMRToRankMatrix}()},
+\code{\link{friedmanPostHocTestBMR}()},
+\code{\link{friedmanTestBMR}()},
+\code{\link{generateCritDifferencesData}()},
+\code{\link{getBMRAggrPerformances}()},
+\code{\link{getBMRFeatSelResults}()},
+\code{\link{getBMRFilteredFeatures}()},
+\code{\link{getBMRLearnerIds}()},
+\code{\link{getBMRLearnerShortNames}()},
+\code{\link{getBMRLearners}()},
+\code{\link{getBMRMeasureIds}()},
+\code{\link{getBMRMeasures}()},
+\code{\link{getBMRModels}()},
+\code{\link{getBMRPerformances}()},
+\code{\link{getBMRPredictions}()},
+\code{\link{getBMRTaskDescs}()},
+\code{\link{getBMRTaskIds}()},
+\code{\link{getBMRTuneResults}()},
+\code{\link{plotBMRBoxplots}()},
+\code{\link{plotBMRRanksAsBarChart}()},
+\code{\link{plotBMRSummary}()},
+\code{\link{reduceBatchmarkResults}()}
 }
-
+\concept{benchmark}
+\concept{plot}

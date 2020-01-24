@@ -2,123 +2,132 @@
 % Please edit documentation in R/measures.R
 \docType{data}
 \name{measures}
-\alias{G1}
-\alias{G2}
+\alias{measures}
+\alias{featperc}
+\alias{timetrain}
+\alias{timepredict}
+\alias{timeboth}
+\alias{sse}
+\alias{measureSSE}
+\alias{mse}
+\alias{measureMSE}
+\alias{rmse}
+\alias{measureRMSE}
+\alias{medse}
+\alias{measureMEDSE}
+\alias{sae}
+\alias{measureSAE}
+\alias{mae}
+\alias{measureMAE}
+\alias{medae}
+\alias{measureMEDAE}
+\alias{rsq}
+\alias{measureRSQ}
+\alias{expvar}
+\alias{measureEXPVAR}
+\alias{rrse}
+\alias{measureRRSE}
+\alias{rae}
+\alias{measureRAE}
+\alias{mape}
+\alias{measureMAPE}
+\alias{msle}
+\alias{measureMSLE}
+\alias{rmsle}
+\alias{measureRMSLE}
+\alias{kendalltau}
+\alias{measureKendallTau}
+\alias{spearmanrho}
+\alias{measureSpearmanRho}
+\alias{mmce}
+\alias{measureMMCE}
 \alias{acc}
-\alias{arsq}
-\alias{auc}
-\alias{bac}
+\alias{measureACC}
 \alias{ber}
+\alias{measureBER}
+\alias{multiclass.aunu}
+\alias{measureAUNU}
+\alias{multiclass.aunp}
+\alias{measureAUNP}
+\alias{multiclass.au1u}
+\alias{measureAU1U}
+\alias{multiclass.au1p}
+\alias{measureAU1P}
+\alias{multiclass.brier}
+\alias{measureMulticlassBrier}
+\alias{logloss}
+\alias{measureLogloss}
+\alias{ssr}
+\alias{measureSSR}
+\alias{qsr}
+\alias{measureQSR}
+\alias{lsr}
+\alias{measureLSR}
+\alias{kappa}
+\alias{measureKAPPA}
+\alias{wkappa}
+\alias{measureWKAPPA}
+\alias{auc}
+\alias{measureAUC}
 \alias{brier}
+\alias{measureBrier}
 \alias{brier.scaled}
+\alias{measureBrierScaled}
+\alias{bac}
+\alias{measureBAC}
+\alias{tp}
+\alias{measureTP}
+\alias{tn}
+\alias{measureTN}
+\alias{fp}
+\alias{measureFP}
+\alias{fn}
+\alias{measureFN}
+\alias{tpr}
+\alias{measureTPR}
+\alias{tnr}
+\alias{measureTNR}
+\alias{fpr}
+\alias{measureFPR}
+\alias{fnr}
+\alias{measureFNR}
+\alias{ppv}
+\alias{measurePPV}
+\alias{npv}
+\alias{measureNPV}
+\alias{fdr}
+\alias{measureFDR}
+\alias{mcc}
+\alias{measureMCC}
+\alias{f1}
+\alias{measureF1}
+\alias{gmean}
+\alias{measureGMEAN}
+\alias{gpr}
+\alias{measureGPR}
+\alias{multilabel.hamloss}
+\alias{measureMultilabelHamloss}
+\alias{multilabel.subset01}
+\alias{measureMultilabelSubset01}
+\alias{multilabel.f1}
+\alias{measureMultilabelF1}
+\alias{multilabel.acc}
+\alias{measureMultilabelACC}
+\alias{multilabel.ppv}
+\alias{measureMultilabelPPV}
+\alias{multilabel.tpr}
+\alias{measureMultilabelTPR}
 \alias{cindex}
+\alias{cindex.uno}
+\alias{iauc.uno}
+\alias{ibrier}
+\alias{meancosts}
+\alias{mcp}
 \alias{db}
 \alias{dunn}
-\alias{expvar}
-\alias{f1}
-\alias{fdr}
-\alias{featperc}
-\alias{fn}
-\alias{fnr}
-\alias{fp}
-\alias{fpr}
-\alias{gmean}
-\alias{gpr}
-\alias{kappa}
-\alias{logloss}
-\alias{lsr}
-\alias{mae}
-\alias{mape}
-\alias{mcc}
-\alias{mcp}
-\alias{meancosts}
-\alias{measureACC}
-\alias{measureAU1P}
-\alias{measureAU1U}
-\alias{measureAUC}
-\alias{measureAUNP}
-\alias{measureAUNU}
-\alias{measureBAC}
-\alias{measureBrier}
-\alias{measureBrierScaled}
-\alias{measureEXPVAR}
-\alias{measureFDR}
-\alias{measureFN}
-\alias{measureFNR}
-\alias{measureFP}
-\alias{measureFPR}
-\alias{measureGMEAN}
-\alias{measureGPR}
-\alias{measureKAPPA}
-\alias{measureLSR}
-\alias{measureLogloss}
-\alias{measureMAE}
-\alias{measureMAPE}
-\alias{measureMCC}
-\alias{measureMEDAE}
-\alias{measureMEDSE}
-\alias{measureMMCE}
-\alias{measureMSE}
-\alias{measureMSLE}
-\alias{measureMultiLabelF1}
-\alias{measureMulticlassBrier}
-\alias{measureMultilabelACC}
-\alias{measureMultilabelHamloss}
-\alias{measureMultilabelPPV}
-\alias{measureMultilabelSubset01}
-\alias{measureMultilabelTPR}
-\alias{measureNPV}
-\alias{measurePPV}
-\alias{measureQSR}
-\alias{measureRAE}
-\alias{measureRMSE}
-\alias{measureRRSE}
-\alias{measureRSQ}
-\alias{measureSAE}
-\alias{measureSSE}
-\alias{measureSSR}
-\alias{measureTN}
-\alias{measureTNR}
-\alias{measureTP}
-\alias{measureTPR}
-\alias{measureWKAPPA}
-\alias{measures}
-\alias{medae}
-\alias{medse}
-\alias{mmce}
-\alias{mse}
-\alias{msle}
-\alias{multiclass.au1p}
-\alias{multiclass.au1u}
-\alias{multiclass.aunp}
-\alias{multiclass.aunu}
-\alias{multiclass.brier}
-\alias{multilabel.acc}
-\alias{multilabel.f1}
-\alias{multilabel.hamloss}
-\alias{multilabel.ppv}
-\alias{multilabel.subset01}
-\alias{multilabel.tpr}
-\alias{npv}
-\alias{ppv}
-\alias{qsr}
-\alias{rae}
-\alias{rmse}
-\alias{rmsle}
-\alias{rrse}
-\alias{rsq}
-\alias{sae}
+\alias{G1}
+\alias{G2}
 \alias{silhouette}
-\alias{sse}
-\alias{ssr}
-\alias{timeboth}
-\alias{timepredict}
-\alias{timetrain}
-\alias{tn}
-\alias{tnr}
-\alias{tp}
-\alias{tpr}
-\alias{wkappa}
 \title{Performance measures.}
 \format{none}
 \usage{
@@ -166,8 +175,6 @@ expvar
 
 measureEXPVAR(truth, response)
 
-arsq
-
 rrse
 
 measureRRSE(truth, response)
@@ -186,6 +193,16 @@ measureMSLE(truth, response)
 
 rmsle
 
+measureRMSLE(truth, response)
+
+kendalltau
+
+measureKendallTau(truth, response)
+
+spearmanrho
+
+measureSpearmanRho(truth, response)
+
 mmce
 
 measureMMCE(truth, response)
@@ -195,6 +212,8 @@ acc
 measureACC(truth, response)
 
 ber
+
+measureBER(truth, response)
 
 multiclass.aunu
 
@@ -254,7 +273,7 @@ measureBrierScaled(probabilities, truth, negative, positive)
 
 bac
 
-measureBAC(truth, response, negative, positive)
+measureBAC(truth, response)
 
 tp
 
@@ -290,7 +309,7 @@ measureFNR(truth, response, negative, positive)
 
 ppv
 
-measurePPV(truth, response, positive)
+measurePPV(truth, response, positive, probabilities = NULL)
 
 npv
 
@@ -305,6 +324,8 @@ mcc
 measureMCC(truth, response, negative, positive)
 
 f1
+
+measureF1(truth, response, positive)
 
 gmean
 
@@ -324,7 +345,7 @@ measureMultilabelSubset01(truth, response)
 
 multilabel.f1
 
-measureMultiLabelF1(truth, response)
+measureMultilabelF1(truth, response)
 
 multilabel.acc
 
@@ -339,6 +360,12 @@ multilabel.tpr
 measureMultilabelTPR(truth, response)
 
 cindex
+
+cindex.uno
+
+iauc.uno
+
+ibrier
 
 meancosts
 
@@ -355,52 +382,71 @@ G2
 silhouette
 }
 \arguments{
-\item{truth}{[\code{factor}]\cr
+\item{truth}{(\link{factor})\cr
 Vector of the true class.}
 
-\item{response}{[\code{factor}]\cr
+\item{response}{(\link{factor})\cr
 Vector of the predicted class.}
 
-\item{probabilities}{[\code{numeric} | \code{matrix}]\cr
+\item{probabilities}{(\link{numeric} | \link{matrix})\cr
 a) For purely binary classification measures: The predicted probabilities for the positive class as a numeric vector.
 b) For multiclass classification measures: The predicted probabilities for all classes, always as a numeric matrix, where
 columns are named with class labels.}
 
-\item{negative}{[\code{character(1)}]\cr
+\item{negative}{(\code{character(1)})\cr
 The name of the negative class.}
 
-\item{positive}{[\code{character(1)}]\cr
+\item{positive}{(\code{character(1)})\cr
 The name of the positive class.}
 }
 \description{
-A performance measure is evaluated after a single train/predict step and returns a single number to assess the quality
-of the prediction (or maybe only the model, think AIC).
-The measure itself knows whether it wants to be minimized or maximized and for what tasks it is applicable.
+A performance measure is evaluated after a single train/predict step and
+returns a single number to assess the quality of the prediction (or maybe
+only the model, think AIC). The measure itself knows whether it wants to be
+minimized or maximized and for what tasks it is applicable.
 
-All supported measures can be found by \code{\link{listMeasures}} or as a table
-in the tutorial appendix: \url{http://mlr-org.github.io/mlr-tutorial/release/html/measures/}.
+All supported measures can be found by \link{listMeasures} or as a table in the
+tutorial appendix: \url{https://mlr.mlr-org.com/articles/tutorial/measures.html}.
 
-If you want a measure for a misclassification cost matrix, look at \code{\link{makeCostMeasure}}.
-If you want to implement your own measure, look at \code{\link{makeMeasure}}.
+If you want a measure for a misclassification cost matrix, look at
+\link{makeCostMeasure}. If you want to implement your own measure, look at
+\link{makeMeasure}.
 
-Most measures can directly be accessed via the function named after the scheme measureX (e.g. measureSSE).
+Most measures can directly be accessed via the function named after the
+scheme measureX (e.g. measureSSE).
 
-For clustering measures, we compact the predicted cluster IDs such that they form a continuous series
-starting with 1. If this is not the case, some of the measures will generate warnings.
+For clustering measures, we compact the predicted cluster IDs such that they
+form a continuous series starting with 1. If this is not the case, some of
+the measures will generate warnings.
+
+Some measure have parameters. Their defaults are set in the constructor
+\link{makeMeasure} and can be overwritten using \link{setMeasurePars}.
 }
 \references{
 He, H. & Garcia, E. A. (2009)
 \emph{Learning from Imbalanced Data.}
 IEEE Transactions on Knowledge and Data Engineering, vol. 21, no. 9. pp. 1263-1284.
+
+H. Uno et al.
+\emph{On the C-statistics for Evaluating Overall Adequacy of Risk Prediction Procedures with Censored Survival Data}
+Statistics in medicine. 2011;30(10):1105-1117. \url{https://doi.org/10.1002/sim.4154}.
+
+H. Uno et al.
+\emph{Evaluating Prediction Rules for T-Year Survivors with Censored Regression Models}
+Journal of the American Statistical Association 102, no. 478 (2007): 527-37. \url{https://www.jstor.org/stable/27639883}.
 }
 \seealso{
-Other performance: \code{\link{ConfusionMatrix}},
-  \code{\link{calculateConfusionMatrix}},
-  \code{\link{calculateROCMeasures}},
-  \code{\link{estimateRelativeOverfitting}},
-  \code{\link{makeCostMeasure}},
-  \code{\link{makeCustomResampledMeasure}},
-  \code{\link{makeMeasure}}, \code{\link{performance}}
+Other performance: 
+\code{\link{ConfusionMatrix}},
+\code{\link{calculateConfusionMatrix}()},
+\code{\link{calculateROCMeasures}()},
+\code{\link{estimateRelativeOverfitting}()},
+\code{\link{makeCostMeasure}()},
+\code{\link{makeCustomResampledMeasure}()},
+\code{\link{makeMeasure}()},
+\code{\link{performance}()},
+\code{\link{setAggregation}()},
+\code{\link{setMeasurePars}()}
 }
+\concept{performance}
 \keyword{datasets}
-

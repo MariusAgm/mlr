@@ -7,19 +7,20 @@
 getFeatSelResult(object)
 }
 \arguments{
-\item{object}{[\code{\link{WrappedModel}}]\cr
-Trained Model created with \code{\link{makeFeatSelWrapper}}.}
+\item{object}{(\link{WrappedModel})\cr
+Trained Model created with \link{makeFeatSelWrapper}.}
 }
 \value{
-[\code{\link{FeatSelResult}}].
+(\link{FeatSelResult}).
 }
 \description{
 Returns the selected feature set and optimization path after training.
 }
 \seealso{
-Other featsel: \code{\link{FeatSelControl}},
-  \code{\link{analyzeFeatSelResult}},
-  \code{\link{makeFeatSelWrapper}},
-  \code{\link{selectFeatures}}
+Other featsel: 
+\code{\link{FeatSelControl}},
+\code{\link{analyzeFeatSelResult}()},
+\code{\link{makeFeatSelWrapper}()},
+\code{\link{selectFeatures}()}
 }
-
+\concept{featsel}

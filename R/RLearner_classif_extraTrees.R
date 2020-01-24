@@ -19,7 +19,8 @@ makeRLearner.classif.extraTrees = function() {
     ),
     properties = c("numerics", "weights", "twoclass", "multiclass", "prob"),
     name = "Extremely Randomized Trees",
-    short.name = "extraTrees"
+    short.name = "extraTrees",
+    callees = "extraTrees"
   )
 }
 
@@ -27,8 +28,9 @@ makeRLearner.classif.extraTrees = function() {
 trainLearner.classif.extraTrees = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE)
   args = c(list(x = as.matrix(d$data), y = d$target), list(...))
-  if (!is.null(.weights))
+  if (!is.null(.weights)) {
     args$weights = .weights
+  }
   do.call(extraTrees::extraTrees, args)
 }
 

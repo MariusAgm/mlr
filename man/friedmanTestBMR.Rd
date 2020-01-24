@@ -7,25 +7,25 @@
 friedmanTestBMR(bmr, measure = NULL, aggregation = "default")
 }
 \arguments{
-\item{bmr}{[\code{\link{BenchmarkResult}}]\cr
+\item{bmr}{(\link{BenchmarkResult})\cr
 Benchmark result.}
 
-\item{measure}{[\code{\link{Measure}}]\cr
+\item{measure}{(\link{Measure})\cr
 Performance measure.
 Default is the first measure used in the benchmark experiment.}
 
-\item{aggregation}{[\code{character(1)}] \cr
-\dQuote{mean} or \dQuote{default}. See \code{\link{getBMRAggrPerformances}}
+\item{aggregation}{(\code{character(1)}) \cr
+\dQuote{mean} or \dQuote{default}. See \link{getBMRAggrPerformances}
 for details on \dQuote{default}.}
 }
 \value{
-[\code{htest}]: See \code{\link[stats]{friedman.test}} for details.
+(\code{htest}): See \link[stats:friedman.test]{stats::friedman.test} for details.
 }
 \description{
-Performs a \code{\link[stats]{friedman.test}} for a selected measure.
+Performs a \link[stats:friedman.test]{stats::friedman.test} for a selected measure.
 The null hypothesis is that apart from an effect of the different
-[\code{\link{Task}}], the location parameter (aggregated performance measure)
-is the same for each \code{\link{Learner}}.
+(\link{Task}), the location parameter (aggregated performance measure)
+is the same for each \link{Learner}.
 Note that benchmark results for at least two learners on at least two tasks
 are required.
 }
@@ -33,27 +33,31 @@ are required.
 # see benchmark
 }
 \seealso{
-Other benchmark: \code{\link{BenchmarkResult}},
-  \code{\link{benchmark}},
-  \code{\link{convertBMRToRankMatrix}},
-  \code{\link{friedmanPostHocTestBMR}},
-  \code{\link{generateCritDifferencesData}},
-  \code{\link{getBMRAggrPerformances}},
-  \code{\link{getBMRFeatSelResults}},
-  \code{\link{getBMRFilteredFeatures}},
-  \code{\link{getBMRLearnerIds}},
-  \code{\link{getBMRLearnerShortNames}},
-  \code{\link{getBMRLearners}},
-  \code{\link{getBMRMeasureIds}},
-  \code{\link{getBMRMeasures}}, \code{\link{getBMRModels}},
-  \code{\link{getBMRPerformances}},
-  \code{\link{getBMRPredictions}},
-  \code{\link{getBMRTaskDescriptions}},
-  \code{\link{getBMRTaskIds}},
-  \code{\link{getBMRTuneResults}},
-  \code{\link{plotBMRBoxplots}},
-  \code{\link{plotBMRRanksAsBarChart}},
-  \code{\link{plotBMRSummary}},
-  \code{\link{plotCritDifferences}}
+Other benchmark: 
+\code{\link{BenchmarkResult}},
+\code{\link{batchmark}()},
+\code{\link{benchmark}()},
+\code{\link{convertBMRToRankMatrix}()},
+\code{\link{friedmanPostHocTestBMR}()},
+\code{\link{generateCritDifferencesData}()},
+\code{\link{getBMRAggrPerformances}()},
+\code{\link{getBMRFeatSelResults}()},
+\code{\link{getBMRFilteredFeatures}()},
+\code{\link{getBMRLearnerIds}()},
+\code{\link{getBMRLearnerShortNames}()},
+\code{\link{getBMRLearners}()},
+\code{\link{getBMRMeasureIds}()},
+\code{\link{getBMRMeasures}()},
+\code{\link{getBMRModels}()},
+\code{\link{getBMRPerformances}()},
+\code{\link{getBMRPredictions}()},
+\code{\link{getBMRTaskDescs}()},
+\code{\link{getBMRTaskIds}()},
+\code{\link{getBMRTuneResults}()},
+\code{\link{plotBMRBoxplots}()},
+\code{\link{plotBMRRanksAsBarChart}()},
+\code{\link{plotBMRSummary}()},
+\code{\link{plotCritDifferences}()},
+\code{\link{reduceBatchmarkResults}()}
 }
-
+\concept{benchmark}

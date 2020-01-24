@@ -8,15 +8,16 @@ makeRLearner.regr.rsm = function() {
       # FIXME rsm() seems to have no default as one expression is needed for the formula, if there is a default, par.vals is redundant
     ),
     par.vals = list(modelfun = "FO"),
-    properties = c("numerics"),
+    properties = "numerics",
     name = "Response Surface Regression",
     short.name = "rsm",
-    note = 'You select the order of the regression by using `modelfun = "FO"` (first order), `"TWI"` (two-way interactions, this is with 1st oder terms!) and `"SO"` (full second order).'
+    note = 'You select the order of the regression by using `modelfun = "FO"` (first order), `"TWI"` (two-way interactions, this is with 1st oder terms!) and `"SO"` (full second order).',
+    callees = "rsm"
   )
 }
 
 #' @export
-trainLearner.regr.rsm = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.rsm = function(.learner, .task, .subset, .weights = NULL, ...) {
   mf = list(...)$modelfun
   vs = stri_paste(getTaskFeatureNames(.task), collapse = ",", sep = " ")
   g = function(x) stri_paste(x, "(", vs, ")", sep = "")

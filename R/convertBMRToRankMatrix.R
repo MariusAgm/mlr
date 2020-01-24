@@ -8,16 +8,17 @@
 #'
 #' @template arg_bmr
 #' @template arg_measure
-#' @param ties.method [\code{character(1)}]\cr
-#'   See \code{\link[base]{rank}} for details.
+#' @param ties.method (`character(1)`)\cr
+#'   See [base::rank] for details.
 #' @template arg_aggregation_method
-#' @return [\code{matrix}] with measure ranks as entries.
-#'   The matrix has one row for each \code{learner}, and one column for each \code{task}.
+#' @return ([matrix]) with measure ranks as entries.
+#'   The matrix has one row for each `learner`, and one column for each `task`.
 #' @family benchmark
 #' @export
 #' @examples
 #' # see benchmark
 convertBMRToRankMatrix = function(bmr, measure = NULL, ties.method = "average", aggregation = "default") {
+
   assertClass(bmr, "BenchmarkResult")
   measure = checkBMRMeasure(measure, bmr)
   assertChoice(aggregation, c("mean", "default"))
@@ -34,15 +35,16 @@ convertBMRToRankMatrix = function(bmr, measure = NULL, ties.method = "average", 
   }
 
   # calculate ranks, rank according to minimize option of the measure
-  if (!measure$minimize)
+  if (!measure$minimize) {
     df$x = -df$x
-  df[, "alg.rank" := rank(.SD$x, ties.method = ties.method), by = "task.id"]
+  }
+  df[, "alg.rank" := rank(.SD$x, ties.method = ties.method), by = "task.id"] # nolint FIXME: find out what `:=` looks like in the AST and adjust the linter
 
   # convert into matrix, rows = leaner, cols = tasks
-  df = melt(setDF(df), c("task.id", "learner.id"), "alg.rank")
+  df = melt(df, c("task.id", "learner.id"), "alg.rank")
   df = dcast(df, learner.id ~ task.id)
   task.id.names = setdiff(colnames(df), "learner.id")
-  mat = as.matrix(df[, task.id.names])
+  mat = as.matrix(setDF(df)[, task.id.names])
   rownames(mat) = df$learner.id
   colnames(mat) = task.id.names
   return(mat)

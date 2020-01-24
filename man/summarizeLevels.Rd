@@ -7,17 +7,30 @@
 summarizeLevels(obj, cols = NULL)
 }
 \arguments{
-\item{obj}{[\code{data.frame} | \code{\link{Task}}]\cr
+\item{obj}{(\link{data.frame} | \link{Task})\cr
 Input data.}
 
-\item{cols}{[\code{character}]\cr
+\item{cols}{(\link{character})\cr
 Restrict result to columns in \code{cols}.
 Default is all factor, character and logical columns of \code{obj}.}
 }
 \value{
-[\code{list}]. Named list of tables.
+(\link{list}). Named list of tables.
 }
 \description{
 Characters and logicals will be treated as factors.
 }
-
+\examples{
+summarizeLevels(iris)
+}
+\seealso{
+Other eda_and_preprocess: 
+\code{\link{capLargeValues}()},
+\code{\link{createDummyFeatures}()},
+\code{\link{dropFeatures}()},
+\code{\link{mergeSmallFactorLevels}()},
+\code{\link{normalizeFeatures}()},
+\code{\link{removeConstantFeatures}()},
+\code{\link{summarizeColumns}()}
+}
+\concept{eda_and_preprocess}

@@ -10,17 +10,16 @@ test_that("regr_IBk", {
 
   old.predicts.list = list()
 
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     ctrl = do.call(RWeka::Weka_control, parset)
     pars = list(regr.formula, data = regr.train)
     pars = c(pars, parset)
-    set.seed(getOption("mlr.debug.seed"))
-    m =  RWeka::IBk(regr.formula, regr.train, control = ctrl)
-    set.seed(getOption("mlr.debug.seed"))
+    m = RWeka::IBk(regr.formula, regr.train, control = ctrl)
     p = predict(m, newdata = regr.test)
     old.predicts.list[[i]] = p
   }
 
-  testSimpleParsets("regr.IBk", regr.df, regr.target, regr.train.inds, old.predicts.list, parset.list)
+  testSimpleParsets("regr.IBk", regr.df, regr.target, regr.train.inds,
+    old.predicts.list, parset.list)
 })

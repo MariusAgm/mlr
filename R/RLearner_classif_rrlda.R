@@ -13,12 +13,13 @@ makeRLearner.classif.rrlda = function() {
     ),
     properties = c("twoclass", "multiclass", "numerics"),
     name = "Robust Regularized Linear Discriminant Analysis",
-    short.name = "rrlda"
+    short.name = "rrlda",
+    callees = "rrlda"
   )
 }
 
 #' @export
-trainLearner.classif.rrlda = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.classif.rrlda = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE, recode.target = "drop.levels")
   rrlda::rrlda(x = d$data, grouping = d$target, ...)
 }

@@ -11,16 +11,16 @@
 #' are generated is defined by an error-correcting-output-code (ECOC) code book.
 #' This also allows the simple and well-known one-vs-one and one-vs-rest
 #' approaches. Decoding is currently done via Hamming decoding, see
-#' e.g. here \url{http://jmlr.org/papers/volume11/escalera10a/escalera10a.pdf}.
+#' e.g. here <http://jmlr.org/papers/volume11/escalera10a/escalera10a.pdf>.
 #'
 #' Currently, the approach always operates on the discrete predicted labels
 #' of the binary base models (instead of their probabilities) and the created
 #' wrapper cannot predict posterior probabilities.
 #'
 #' @template arg_learner
-#' @param mcw.method [character(1) | function] \cr
+#' @param mcw.method (`character(1)` | `function`) \cr
 #'   \dQuote{onevsone} or \dQuote{onevsrest}.
-#'   You can also pass a function, with signature \code{function(task)} and which
+#'   You can also pass a function, with signature `function(task)` and which
 #'   returns a ECOC codematrix with entries +1,-1,0.
 #'   Columns define new binary problems, rows correspond to classes (rows must be named).
 #'   0 means class is not included in binary problem.
@@ -29,6 +29,7 @@
 #' @family wrapper
 #' @export
 makeMulticlassWrapper = function(learner, mcw.method = "onevsrest") {
+
   learner = checkLearner(learner)
   ps = makeParamSet(
     makeUntypedLearnerParam(id = "mcw.method", default = "onevsrest")
@@ -41,45 +42,54 @@ makeMulticlassWrapper = function(learner, mcw.method = "onevsrest") {
   id = stri_paste(learner$id, "multiclass", sep = ".")
 
   x = makeHomogeneousEnsemble(id = id, type = "classif", next.learner = learner,
-    package = learner$package,  par.set = ps, par.vals = pv,
+    package = learner$package, par.set = ps, par.vals = pv,
     learner.subclass = "MulticlassWrapper", model.subclass = "MulticlassModel")
   x = setPredictType(x, predict.type = "response")
   return(x)
 }
 
 #' @export
-trainLearner.MulticlassWrapper = function(.learner, .task, .subset, .weights = NULL, mcw.method, ...) {
+trainLearner.MulticlassWrapper = function(.learner, .task, .subset = NULL, .weights = NULL, mcw.method, ...) {
+
   .task = subsetTask(.task, .subset)
-  tn = getTaskTargetNames(.task)
-  d = getTaskData(.task)
   y = getTaskTargets(.task)
   cm = buildCMatrix(mcw.method, .task)
   x = multi.to.binary(y, cm)
-  # now fit models
-  models = lapply(seq_along(x$row.inds), function(i) {
-    data2 = d[x$row.inds[[i]], , drop = FALSE]
-    data2[, tn] = x$targets[[i]]
-    ct = changeData(.task, data2)
-    ct$task.desc$positive = "1"
-    ct$task.desc$negative = "-1"
-    train(.learner$next.learner, ct, weights = .weights)
-  })
+  args = list(x = x, learner = .learner, task = .task, weights = .weights)
+  parallelLibrary("mlr", master = FALSE, level = "mlr.ensemble", show.info = FALSE)
+  exportMlrOptions(level = "mlr.ensemble")
+  models = parallelMap(i = seq_along(x$row.inds), doMulticlassTrainIteration,
+    more.args = args, level = "mlr.ensemble")
   m = makeHomChainModel(.learner, models)
   m$cm = cm
   return(m)
 }
 
+doMulticlassTrainIteration = function(x, i, learner, task, weights) {
+
+  setSlaveOptions()
+  d = getTaskData(task, functionals.as = "matrix")
+  tn = getTaskTargetNames(task)
+  data2 = d[x$row.inds[[i]], , drop = FALSE]
+  data2[, tn] = x$targets[[i]]
+  ct = changeData(task, data2)
+  ct$task.desc$positive = "1"
+  ct$task.desc$negative = "-1"
+  train(learner$next.learner, ct, weights = weights)
+}
 
 #' @export
-predictLearner.MulticlassWrapper = function(.learner, .model, .newdata, ...) {
+predictLearner.MulticlassWrapper = function(.learner, .model, .newdata, .subset = NULL, ...) {
+
   models = .model$learner.model$next.model
   cm = .model$learner.model$cm
   # predict newdata with every binary model, get n x n.models matrix of +1,-1
   # FIXME: this will break for length(models) == 1? do not use sapply!
   p = sapply(models, function(m) {
-    pred = predict(m, newdata = .newdata, ...)$data$response
-    if (is.factor(pred))
+    pred = predict(m, newdata = .newdata, subset = .subset, ...)$data$response
+    if (is.factor(pred)) {
       pred = as.numeric(pred == "1") * 2 - 1
+    }
     pred
   })
   rns = rownames(cm)
@@ -92,7 +102,7 @@ predictLearner.MulticlassWrapper = function(.learner, .model, .newdata, ...) {
 }
 
 #' @export
-getLearnerProperties.MulticlassWrapper = function(learner){
+getLearnerProperties.MulticlassWrapper = function(learner) {
   props = getLearnerProperties(learner$next.learner)
   props = union(props, "multiclass")
   setdiff(props, "prob")
@@ -100,7 +110,7 @@ getLearnerProperties.MulticlassWrapper = function(learner){
 
 ##############################               helpers                      ##############################
 
-buildCMatrix = function (mcw.method, .task) {
+buildCMatrix = function(mcw.method, .task) {
   if (is.function(mcw.method)) {
     meth = mcw.method
   } else {
@@ -110,24 +120,29 @@ buildCMatrix = function (mcw.method, .task) {
   }
   levs = getTaskClassLevels(.task)
   cm = meth(.task)
-  if (!setequal(rownames(cm), levs))
+  if (!setequal(rownames(cm), levs)) {
     stop("Rownames of codematrix must be class levels!")
-  if (!all(cm == 1 | cm == -1 | cm == 0))
-    stop("Codematrix must only contain: -1,0,+1!")
+  }
+  if (!all(cm == 1 | cm == -1 | cm == 0)) {
+    stop("Codematrix must only contain: -1, 0, +1!")
+  }
   cm
 }
 
 
 # function for multi-to-binary problem conversion
 multi.to.binary = function(target, codematrix) {
-  if (anyMissing(codematrix))
+
+  if (anyMissing(codematrix)) {
     stop("Code matrix contains missing values!")
+  }
   levs = levels(target)
   rns = rownames(codematrix)
-  if (is.null(rns) || !setequal(rns, levs))
+  if (is.null(rns) || !setequal(rns, levs)) {
     stop("Rownames of code matrix have to be the class levels!")
+  }
 
-  binary.targets = as.data.frame(codematrix[target,, drop = FALSE])
+  binary.targets = as.data.frame(codematrix[target, , drop = FALSE])
   row.inds = lapply(binary.targets, function(v) which(v != 0))
   names(row.inds) = NULL
   targets = Map(function(y, i) factor(y[i]), binary.targets, row.inds)

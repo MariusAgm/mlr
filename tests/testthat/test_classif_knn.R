@@ -11,7 +11,7 @@ test_that("classif_knn", {
   old.predicts.list = list()
   old.probs.list = list()
 
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     train = multiclass.train
     y = train[, multiclass.target]
@@ -20,7 +20,6 @@ test_that("classif_knn", {
     test[, multiclass.target] = NULL
     pars = list(train = train, cl = y, test = test)
     pars = c(pars, parset)
-    set.seed(getOption("mlr.debug.seed"))
     p = do.call(class::knn, pars)
     old.predicts.list[[i]] = p
   }
@@ -28,7 +27,7 @@ test_that("classif_knn", {
   testSimpleParsets("classif.knn", multiclass.df, multiclass.target, multiclass.train.inds,
     old.predicts.list, parset.list)
 
-  tt = function (formula, data, k = 1) {
+  tt = function(formula, data, k = 1) {
     return(list(formula = formula, data = data, k = k))
   }
   tp = function(model, newdata) {
@@ -37,10 +36,9 @@ test_that("classif_knn", {
     y = train[, target]
     train[, target] = NULL
     newdata[, target] = NULL
-    set.seed(getOption("mlr.debug.seed"))
     class::knn(train = train, cl = y, test = newdata, k = model$k)
   }
 
-  testCVParsets("classif.knn", multiclass.df, multiclass.target, tune.train = tt, tune.predict = tp,
-    parset.list = parset.list)
+  testCVParsets("classif.knn", multiclass.df, multiclass.target, tune.train = tt,
+    tune.predict = tp, parset.list = parset.list)
 })

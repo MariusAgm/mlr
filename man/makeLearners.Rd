@@ -7,45 +7,55 @@
 makeLearners(cls, ids = NULL, type = NULL, ...)
 }
 \arguments{
-\item{cls}{[\code{character}]\cr
+\item{cls}{(\link{character})\cr
 Classes of learners.}
 
-\item{ids}{[\code{character}]\cr
+\item{ids}{(\link{character})\cr
 Id strings. Must be unique.
 Default is \code{cls}.}
 
-\item{type}{[\code{character(1)}]\cr
+\item{type}{(\code{character(1)})\cr
 Shortcut to prepend type string to \code{cls} so one can set \code{cls = "rpart"}.
 Default is \code{NULL}, i.e., this is not used.}
 
-\item{...}{[any]\cr
-Optional named (hyper)parameters.
-Alternatively these can be given using the \code{par.vals} argument.}
+\item{...}{(any)\cr Optional named (hyper)parameters. If you want to set
+specific hyperparameters for a learner during model creation, these should
+go here. You can get a list of available hyperparameters using
+\verb{getParamSet(<learner>)}. Alternatively hyperparameters can be given using
+the \code{par.vals} argument but \code{...} should be preferred!}
 }
 \value{
-[named list of \code{\link{Learner}}]. Named by \code{ids}.
+(named list of \link{Learner}). Named by \code{ids}.
 }
 \description{
 Small helper function that can save some typing when creating mutiple learner objects.
-Calls \code{\link{makeLearner}} multiple times internally.
+Calls \link{makeLearner} multiple times internally.
 }
 \examples{
 makeLearners(c("rpart", "lda"), type = "classif", predict.type = "prob")
 }
 \seealso{
-Other learner: \code{\link{LearnerProperties}},
-  \code{\link{getClassWeightParam}},
-  \code{\link{getHyperPars}}, \code{\link{getLearnerId}},
-  \code{\link{getLearnerPackages}},
-  \code{\link{getLearnerParVals}},
-  \code{\link{getLearnerParamSet}},
-  \code{\link{getLearnerPredictType}},
-  \code{\link{getLearnerShortName}},
-  \code{\link{getLearnerType}}, \code{\link{getParamSet}},
-  \code{\link{makeLearner}}, \code{\link{removeHyperPars}},
-  \code{\link{setHyperPars}}, \code{\link{setId}},
-  \code{\link{setLearnerId}},
-  \code{\link{setPredictThreshold}},
-  \code{\link{setPredictType}}
+Other learner: 
+\code{\link{LearnerProperties}},
+\code{\link{getClassWeightParam}()},
+\code{\link{getHyperPars}()},
+\code{\link{getLearnerId}()},
+\code{\link{getLearnerNote}()},
+\code{\link{getLearnerPackages}()},
+\code{\link{getLearnerParVals}()},
+\code{\link{getLearnerParamSet}()},
+\code{\link{getLearnerPredictType}()},
+\code{\link{getLearnerShortName}()},
+\code{\link{getLearnerType}()},
+\code{\link{getParamSet}()},
+\code{\link{helpLearnerParam}()},
+\code{\link{helpLearner}()},
+\code{\link{makeLearner}()},
+\code{\link{removeHyperPars}()},
+\code{\link{setHyperPars}()},
+\code{\link{setId}()},
+\code{\link{setLearnerId}()},
+\code{\link{setPredictThreshold}()},
+\code{\link{setPredictType}()}
 }
-
+\concept{learner}

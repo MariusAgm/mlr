@@ -7,12 +7,14 @@ makeRLearner.classif.lvq1 = function() {
     par.set = makeParamSet(),
     properties = c("twoclass", "multiclass", "numerics"),
     name = "Learning Vector Quantization",
-    short.name = "lvq1"
+    short.name = "lvq1",
+    callees = c("lvq1", "lvqinit", "lvqtest")
   )
 }
 
 #' @export
-trainLearner.classif.lvq1 = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.classif.lvq1 = function(.learner, .task, .subset, .weights = NULL, ...) {
+
   d = getTaskData(.task, .subset, target.extra = TRUE)
   cdbk.args = insert(list(), list(...), c("size", "k", "prior"))
   cdbk.args$x = d$data

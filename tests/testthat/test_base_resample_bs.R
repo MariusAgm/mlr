@@ -26,12 +26,13 @@ test_that("bs resampling works", {
 
   requirePackagesOrSkip("rpart", default.method = "load")
   tt = function(formula, data, subset) {
-    rpart::rpart(formula, data = data[subset,], minsplit = 12, cp = 0.09)
+    rpart::rpart(formula, data = data[subset, ], minsplit = 12, cp = 0.09)
   }
   tp = function(model, newdata) {
     predict(model, newdata, type = "class")
   }
-  testBootstrap("classif.rpart", multiclass.df, multiclass.target, tune.train = tt, tune.predict = tp, parset = parset)
+  testBootstrap("classif.rpart", multiclass.df, multiclass.target,
+    tune.train = tt, tune.predict = tp, parset = parset)
 })
 
 test_that("bs instance is stochastic", {

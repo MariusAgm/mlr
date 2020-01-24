@@ -2,7 +2,7 @@
 makeRLearner.regr.bst = function() {
   makeRLearnerRegr(
     cl = "regr.bst",
-    package = "bst",
+    package = c("bst", "rpart"),
     par.set = makeParamSet(
       makeNumericLearnerParam(id = "cost", default = 0.5, lower = 0, upper = 1),
       makeIntegerLearnerParam(id = "mstop", default = 50L, lower = 1L, when = "both"),
@@ -28,10 +28,11 @@ makeRLearner.regr.bst = function() {
     ),
     par.vals = list(Learner = "ls", maxdepth = 1L, xval = 0L),
     # FIXME par.vals default for maxdepth is the same as the default of LearnerParam and the function
-    properties = c("numerics"),
+    properties = "numerics",
     name = "Gradient Boosting",
     short.name = "bst",
-    note = 'Renamed parameter `learner` to `Learner` due to nameclash with `setHyperPars`. Default changes: `Learner = "ls"`, `xval = 0`, and `maxdepth = 1`.'
+    note = 'Renamed parameter `learner` to `Learner` due to nameclash with `setHyperPars`. Default changes: `Learner = "ls"`, `xval = 0`, and `maxdepth = 1`.',
+    callees = c("bst", "bst_control", "rpart.control")
   )
 }
 
@@ -42,7 +43,7 @@ trainLearner.regr.bst = function(.learner, .task, .subset, .weights = NULL, msto
   d = getTaskData(.task, .subset, target.extra = TRUE)
   ctrl = learnerArgsToControl(bst::bst_control, mstop, nu, twinboost, f.init,
     xselect.init, center, trace, numsample, df)
-  control.tree = learnerArgsToControl(list,  minsplit, minbucket, cp, maxsurrogate,
+  control.tree = learnerArgsToControl(list, minsplit, minbucket, cp, maxsurrogate,
     usesurrogate, surrogatestyle, maxdepth, xval)
   bst::bst(x = d$data, y = d$target, family = "gaussian", ctrl = ctrl,
     control.tree = control.tree, learner = Learner, ...)

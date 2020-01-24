@@ -2,16 +2,22 @@
 #'
 #' @description
 #'
-#' A subclass of \code{\link{WrappedModel}}. It is created
-#' - if you set the respective option in \code{\link{configureMlr}} -
+#' A subclass of [WrappedModel]. It is created
+#' - if you set the respective option in [configureMlr] -
 #' when a model internally crashed during training.
 #' The model always predicts NAs.
 #'
-#' Its encapsulated \code{learner.model} is simply a string:
+#' The if mlr option `on.error.dump` is `TRUE`, the
+#' `FailureModel` contains the debug trace of the error.
+#' It can be accessed with `getFailureModelDump` and
+#' inspected with `debugger`.
+#'
+#' Its encapsulated `learner.model` is simply a string:
 #' The error message that was generated when the model crashed.
 #' The following code shows how to access the message.
 #'
 #' @name FailureModel
+#' @family debug
 #' @rdname FailureModel
 #' @examples
 #' configureMlr(on.learner.error = "warn")
@@ -34,20 +40,23 @@ predictFailureModel = function(model, newdata) {
   n = nrow(newdata)
   if (type == "classif") {
     levs = model$task.desc$class.levels
-    res = if (ptype == "response")
+    res = if (ptype == "response") {
       factor(rep(NA_character_, n), levels = levs)
-    else
+    } else {
       matrix(NA_real_, nrow = n, ncol = length(levs), dimnames = list(NULL, levs))
+    }
   } else if (type == "regr") {
-    res = if (ptype == "response")
+    res = if (ptype == "response") {
       rep(NA_real_, n)
-    else
+    } else {
       matrix(NA_real_, nrow = n, ncol = 2L, dimnames = list(NULL, c("response", "se")))
+    }
   } else if (type == "surv") {
-    if (ptype == "response")
+    if (ptype == "response") {
       res = rep.int(NA_real_, n)
-    else
+    } else {
       stop("Predict type 'prob' for survival not yet supported")
+    }
   } else if (type == "costsens") {
     levs = model$task.desc$class.levels
     res = factor(rep(NA_character_, n), levels = levs)
@@ -73,3 +82,7 @@ getFailureModelMsg.FailureModel = function(model) {
   return(as.character(model$learner.model))
 }
 
+#' @export
+getFailureModelDump.FailureModel = function(model) {
+  return(model$dump)
+}

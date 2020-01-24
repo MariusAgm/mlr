@@ -19,28 +19,25 @@ test_that("classif_plr", {
   old.predicts.list = list()
   old.probs.list = list()
 
-  for (i in 1:length(parset.list1)) {
+  for (i in seq_along(parset.list1)) {
     parset = parset.list1[[i]]
     x = binaryclass.train
     y = as.numeric(x[, binaryclass.class.col] == binaryclass.class.levs[1L])
     x[, binaryclass.class.col] = NULL
     pars = list(x = x, y = y)
     pars = c(pars, parset)
-    set.seed(getOption("mlr.debug.seed"))
     m = do.call(stepPlr::plr, pars)
-    set.seed(getOption("mlr.debug.seed"))
     newx = binaryclass.test
     newx[, binaryclass.class.col] = NULL
     p = stepPlr::predict.plr(m, newx = newx, type = "class")
     p = ifelse(p == 1, binaryclass.class.levs[1L], binaryclass.class.levs[2L])
-    set.seed(getOption("mlr.debug.seed"))
     p2 = stepPlr::predict.plr(m, newx = newx, type = "response")
     old.predicts.list[[i]] = p
     old.probs.list[[i]] = p2
   }
 
-  testSimpleParsets("classif.plr", binaryclass.df, binaryclass.target, binaryclass.train.inds,
-    old.predicts.list, parset.list2)
-  testProbParsets  ("classif.plr", binaryclass.df, binaryclass.target, binaryclass.train.inds,
-    old.probs.list, parset.list2)
+  testSimpleParsets("classif.plr", binaryclass.df, binaryclass.target,
+    binaryclass.train.inds, old.predicts.list, parset.list2)
+  testProbParsets("classif.plr", binaryclass.df, binaryclass.target,
+    binaryclass.train.inds, old.probs.list, parset.list2)
 })

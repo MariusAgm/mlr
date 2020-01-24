@@ -2,7 +2,7 @@
 makeRLearner.regr.mob = function() {
   makeRLearnerRegr(
     cl = "regr.mob",
-    package = "party",
+    package = c("party", "modeltools"),
     par.set = makeParamSet(
       makeNumericLearnerParam(id = "alpha", default = 0.05, lower = 0, upper = 1),
       makeLogicalLearnerParam(id = "bonferroni", default = TRUE),
@@ -18,7 +18,8 @@ makeRLearner.regr.mob = function() {
     par.vals = list(),
     properties = c("numerics", "factors", "weights"),
     name = "Model-based Recursive Partitioning  Yielding a Tree with Fitted Models Associated with each Terminal Node",
-    short.name = "mob"
+    short.name = "mob",
+    callees = c("mob", "mob_control", "glinearModel", "linearModel")
   )
 }
 
@@ -31,22 +32,25 @@ trainLearner.regr.mob = function(.learner, .task, .subset, .weights = NULL, alph
   feats = getTaskFeatureNames(.task)
   # FIXME: document stuff
   # FIXME: think about these defaults, also ask julia
-  if (missing(part.feats))
+  if (missing(part.feats)) {
     part.feats = feats
-  if (missing(term.feats))
+  }
+  if (missing(term.feats)) {
     term.feats = feats
+  }
 
   target = getTaskTargetNames(.task)
   f = as.formula(stri_paste(target, "~", collapse(term.feats, sep = " + "), "|", collapse(part.feats, sep = " + "), sep = " "))
 
   if (is.null(.weights)) {
     model = party::mob(f, data = getTaskData(.task, .subset), control = cntrl, ...)
-  } else  {
+  } else {
     model = party::mob(f, data = getTaskData(.task, .subset), control = cntrl, weights = .weights, ...)
   }
   # sometimes mob fails to fit a model but does not signal an exception.
-  if (anyMissing(coef(model)))
+  if (anyMissing(coef(model))) {
     stop("Failed to fit party::mob. Some coefficients are estimated as NA")
+  }
   model
 }
 

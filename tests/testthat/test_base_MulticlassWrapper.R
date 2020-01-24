@@ -1,8 +1,8 @@
 context("MulticlassWrapper")
 
 test_that("MulticlassWrapper", {
-  #cmatrix function
-  ownCmatrix = function (task) {
+  # cmatrix function
+  ownCmatrix = function(task) {
     cm.onevsrest = function(task) {
       n = length(getTaskClassLevels(task))
       cm = matrix(-1, n, n)
@@ -12,15 +12,17 @@ test_that("MulticlassWrapper", {
     }
     cm = cm.onevsrest(task)
     levs = getTaskClassLevels(task)
-    if (!setequal(rownames(cm), levs))
+    if (!setequal(rownames(cm), levs)) {
       stop("Rownames of codematrix must be class levels!")
-    if (!all(cm == 1 | cm == -1 | cm == 0))
-      stop("Codematrix must only contain: -1,0,+1!")
+    }
+    if (!all(cm == 1 | cm == -1 | cm == 0)) {
+      stop("Codematrix must only contain: -1, 0, +1!")
+    }
     cm
   }
 
   lrn1 = makeLearner("classif.rpart")
-  lrn2 = makeLearner("classif.lqa")
+  lrn2 = makeLearner("classif.ranger")
   lrn3 = makeBaggingWrapper(learner = lrn1, bw.iters = 2)
   lrn1.w = makeMulticlassWrapper(lrn1)
   lrn2.w = makeMulticlassWrapper(lrn2, mcw.method = "onevsone")
@@ -43,7 +45,7 @@ test_that("MulticlassWrapper", {
 test_that("MulticlassWrapper works with multiple factor levels (#620)", {
   df = iris
   df$Sepal.Length = factor(df$Sepal.Length)
-  classif.task = makeClassifTask(id="test", data=df, target="Species")
+  classif.task = makeClassifTask(id = "test", data = df, target = "Species")
   base.lrn = makeLearner("classif.rpart")
   w = makeMulticlassWrapper(base.lrn, mcw.method = "onevsrest")
   rdesc = makeResampleDesc("CV", iters = 2L)

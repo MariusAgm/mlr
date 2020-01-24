@@ -9,7 +9,8 @@ makeRLearner.multilabel.rFerns = function() {
     ),
     properties = c("numerics", "factors", "ordered"),
     name = "Random ferns",
-    short.name = "rFerns"
+    short.name = "rFerns",
+    callees = "rFerns"
   )
 }
 
@@ -23,4 +24,3 @@ trainLearner.multilabel.rFerns = function(.learner, .task, .subset, .weights = N
 predictLearner.multilabel.rFerns = function(.learner, .model, .newdata, ...) {
   as.matrix(predict(.model$learner.model, .newdata, ...))
 }
-

@@ -20,7 +20,8 @@ makeRLearner.regr.extraTrees = function() {
     ),
     properties = c("numerics", "weights"),
     name = "Extremely Randomized Trees",
-    short.name = "extraTrees"
+    short.name = "extraTrees",
+    callees = "extraTrees"
   )
 }
 
@@ -28,8 +29,9 @@ makeRLearner.regr.extraTrees = function() {
 trainLearner.regr.extraTrees = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE)
   args = c(list(x = as.matrix(d$data), y = d$target), list(...))
-  if (!is.null(.weights))
+  if (!is.null(.weights)) {
     args$weights = .weights
+  }
   do.call(extraTrees::extraTrees, args)
 }
 

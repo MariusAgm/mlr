@@ -2,7 +2,7 @@
 makeRLearner.classif.ada = function() {
   makeRLearnerClassif(
     cl = "classif.ada",
-    package = "ada",
+    package = c("ada", "rpart"),
     par.set = makeParamSet(
       makeDiscreteLearnerParam(id = "loss", default = "exponential", values = c("exponential", "logistic")),
       makeDiscreteLearnerParam(id = "type", default = "discrete", values = c("discrete", "real", "gentle")),
@@ -29,12 +29,14 @@ makeRLearner.classif.ada = function() {
     properties = c("twoclass", "numerics", "factors", "prob"),
     name = "ada Boosting",
     short.name = "ada",
-    note = "`xval` has been set to `0` by default for speed."
+    note = "`xval` has been set to `0` by default for speed.",
+    callees = c("ada", "rpart.control")
   )
 }
 
 #' @export
-trainLearner.classif.ada = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.classif.ada = function(.learner, .task, .subset, .weights = NULL, ...) {
+
   f = getTaskFormula(.task)
   dots = list(...)
   # get names of rpart.control args
@@ -55,7 +57,8 @@ predictLearner.classif.ada = function(.learner, .model, .newdata, ...) {
   type = ifelse(.learner$predict.type == "response", "vector", "probs")
   mod = getLearnerModel(.model)
   p = predict(mod, newdata = .newdata, type = type, ...)
-  if (type == "probs")
+  if (type == "probs") {
     colnames(p) = rownames(mod$confusion)
+  }
   return(p)
 }

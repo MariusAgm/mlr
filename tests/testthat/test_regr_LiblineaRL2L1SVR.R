@@ -15,14 +15,14 @@ test_that("regr_LiblineaRL2L1SVR", {
   old.predicts.list = list()
   old.probs.list = list()
 
-  for (i in 1L:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     pars = list(data = regr.num.train[, -regr.num.class.col],
       target = regr.num.train[, regr.num.target], type = 13L)
     pars = c(pars, parset)
     set.seed(getOption("mlr.debug.seed"))
-    m = do.call(LiblineaR::LiblineaR, pars)
-    set.seed(getOption("mlr.debug.seed"))
+    # suppressed warnings: "No value provided for svr_eps. Using default of 0.1!
+    m = suppressWarnings(do.call(LiblineaR::LiblineaR, pars))
     p = predict(m, newx = regr.num.test[, -regr.num.class.col])
     old.predicts.list[[i]] = p$predictions
   }

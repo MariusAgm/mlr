@@ -14,7 +14,8 @@ makeRLearner.classif.LiblineaRMultiClassSVC = function() {
     properties = c("twoclass", "multiclass", "numerics", "class.weights"),
     class.weights.param = "wi",
     name = "Support Vector Classification by Crammer and Singer",
-    short.name = "liblinmulticlasssvc"
+    short.name = "liblinmulticlasssvc",
+    callees = "LiblineaR"
   )
 }
 
@@ -26,5 +27,5 @@ trainLearner.classif.LiblineaRMultiClassSVC = function(.learner, .task, .subset,
 
 #' @export
 predictLearner.classif.LiblineaRMultiClassSVC = function(.learner, .model, .newdata, ...) {
-    as.factor(predict(.model$learner.model, newx = .newdata, ...)$predictions)
+  as.factor(predict(.model$learner.model, newx = .newdata, ...)$predictions)
 }

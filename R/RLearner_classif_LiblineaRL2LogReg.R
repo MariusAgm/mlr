@@ -20,7 +20,8 @@ makeRLearner.classif.LiblineaRL2LogReg = function() {
     class.weights.param = "wi",
     name = "L2-Regularized Logistic Regression",
     short.name = "liblinl2logreg",
-    note = "`type = 0` (the default) is primal and `type = 7` is dual problem."
+    note = "`type = 0` (the default) is primal and `type = 7` is dual problem.",
+    callees = "LiblineaR"
   )
 }
 
@@ -32,8 +33,9 @@ trainLearner.classif.LiblineaRL2LogReg = function(.learner, .task, .subset, .wei
 
 #' @export
 predictLearner.classif.LiblineaRL2LogReg = function(.learner, .model, .newdata, ...) {
-  if (.learner$predict.type == "response")
+  if (.learner$predict.type == "response") {
     as.factor(predict(.model$learner.model, newx = .newdata, ...)$predictions)
-  else
+  } else {
     predict(.model$learner.model, newx = .newdata, proba = TRUE, ...)$probabilities
+  }
 }

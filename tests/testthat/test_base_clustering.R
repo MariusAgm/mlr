@@ -1,17 +1,18 @@
 context("clustering")
 
-test_that("clustering predict",  {
+test_that("clustering predict", {
   lrn = makeLearner("cluster.cmeans", predict.type = "prob")
   model = train(lrn, noclass.task)
   pred = predict(model, task = noclass.task)
   y = pred$data$response
   expect_true(is.integer(y))
+
   p = getPredictionProbabilities(pred)
   expect_true(is.data.frame(p) && nrow(noclass.df) && ncol(p) == max(y))
 })
 
 
-test_that("clustering performance",  {
+test_that("clustering performance", {
   lrn = makeLearner("cluster.SimpleKMeans")
   model = train(lrn, noclass.task)
   pred = predict(model, task = noclass.task)
@@ -23,7 +24,7 @@ test_that("clustering performance",  {
   expect_true(is.numeric(performance(pred, task = noclass.task, measures = silhouette)))
 })
 
-test_that("clustering performance with missing clusters",  {
+test_that("clustering performance with missing clusters", {
   lrn = makeLearner("cluster.SimpleKMeans")
   model = train(lrn, noclass.task)
   pred = predict(model, task = noclass.task)
@@ -36,7 +37,7 @@ test_that("clustering performance with missing clusters",  {
   expect_warning(performance(pred, task = noclass.task, measures = silhouette), NA)
 })
 
-test_that("clustering resample",  {
+test_that("clustering resample", {
   rdesc = makeResampleDesc("Subsample", split = 0.3, iters = 2)
   lrn = makeLearner("cluster.SimpleKMeans")
   res = resample(lrn, noclass.task, rdesc)
@@ -46,9 +47,9 @@ test_that("clustering resample",  {
 })
 
 test_that("clustering benchmark", {
-  task.names = c("noclass")
+  task.names = "noclass"
   tasks = list(noclass.task)
-  learner.names = c("cluster.SimpleKMeans")
+  learner.names = "cluster.SimpleKMeans"
   learners = lapply(learner.names, makeLearner)
   rin = makeResampleDesc("CV", iters = 2L)
 
@@ -57,7 +58,7 @@ test_that("clustering benchmark", {
 })
 
 test_that("clustering downsample", {
-  down.tsk = downsample(noclass.task, perc = 1/3)
+  down.tsk = downsample(noclass.task, perc = 1 / 3)
   expect_equal(getTaskSize(down.tsk), 50L)
 })
 

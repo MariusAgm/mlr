@@ -62,7 +62,7 @@
 # Unifrom: -value ... value, Normal: stddev
 
 # loss
-# Loss function: Automatic, CrossEntropy (for classification only), MeanSquare, Absolute (experimental) or Huber (experimental)
+# Loss function: Automatic, CrossEntropy (for classification only), Quadratic, Absolute (experimental) or Huber (experimental)
 
 # score_interval
 # Shortest time interval (in secs) between model scoring
@@ -151,7 +151,7 @@
 
 # Details: https://leanpub.com/deeplearning/read
 
-#'@export
+#' @export
 makeRLearner.regr.h2o.deeplearning = function() {
   makeRLearnerRegr(
     cl = "regr.h2o.deeplearning",
@@ -161,12 +161,12 @@ makeRLearner.regr.h2o.deeplearning = function() {
       makeLogicalLearnerParam("use_all_factor_level", default = TRUE),
       makeDiscreteLearnerParam("activation", values = c("Rectifier", "Tanh",
         "TanhWithDropout", "RectifierWithDropout", "Maxout", "MaxoutWithDropout"),
-        default = "Rectifier"),
+      default = "Rectifier"),
       # FIXME: hidden can also be a list of integer vectors for grid search
       makeIntegerVectorLearnerParam("hidden", default = c(200L, 200L),
-        len = NA_integer_, lower = 1L), 
+        len = NA_integer_, lower = 1L),
       makeNumericLearnerParam("epochs", default = 10L, lower = 1), # doc says can be fractional
-      makeNumericLearnerParam("train_samples_per_iteration", default = -2, lower = -2), 
+      makeNumericLearnerParam("train_samples_per_iteration", default = -2, lower = -2),
       makeIntegerLearnerParam("seed", tunable = FALSE),
       makeLogicalLearnerParam("adaptive_rate", default = TRUE),
       makeNumericLearnerParam("rho", default = 0.99, lower = 0), # is there a upper limit for this?
@@ -186,10 +186,10 @@ makeRLearner.regr.h2o.deeplearning = function() {
       makeDiscreteLearnerParam("initial_weight_distribution",
         values = c("UniformAdaptive", "Uniform", "Normal"), default = "UniformAdaptive"),
       makeNumericLearnerParam("initial_weight_scale", default = 1),
-      makeDiscreteLearnerParam("loss", values = c("Automatic", "MeanSquare",
+      makeDiscreteLearnerParam("loss", values = c("Automatic", "Quadratic",
         "Absolute", "Huber")),
       makeDiscreteLearnerParam("distribution", values = c("AUTO", "gaussian",
-        "bernoulli", "multinomial", "poisson", "gamma", "tweedie", "laplace",
+        "poisson", "gamma", "tweedie", "laplace",
         "huber", "quantile"), default = "AUTO"),
       makeNumericLearnerParam("quantile_alpha", default = 0.5, lower = 0, upper = 1,
         requires = quote(distribution == "quantile")),
@@ -201,9 +201,9 @@ makeRLearner.regr.h2o.deeplearning = function() {
       makeNumericLearnerParam("score_duty_cycle", default = 0.1),
       makeNumericLearnerParam("regression_stop", default = 1e-6, lower = -1),
       makeIntegerLearnerParam("stopping_rounds", default = 5L, lower = 0L),
-      makeDiscreteLearnerParam("stopping_metric", values = c("AUTO", "deviance", "logloss",
-        "MSE", "AUC", "r2", "misclassification"), default = "AUTO",
-        requires = quote(stopping_rounds > 0L)),
+      makeDiscreteLearnerParam("stopping_metric", values = c("AUTO", "deviance",
+        "mse", "rmse", "mae", "rmsle", "r2"), default = "AUTO",
+      requires = quote(stopping_rounds > 0L)),
       makeNumericLearnerParam("stopping_tolerance", default = 0, lower = 0),
       makeNumericLearnerParam("max_runtime_secs", default = 0, lower = 0),
       makeLogicalLearnerParam("quiet_mode", tunable = FALSE),
@@ -223,23 +223,28 @@ makeRLearner.regr.h2o.deeplearning = function() {
       makeLogicalLearnerParam("sparse", default = FALSE, tunable = FALSE),
       makeLogicalLearnerParam("col_major", default = FALSE, tunable = FALSE),
       makeLogicalLearnerParam("average_activation", tunable = FALSE),
-      #makeLogicalLearnerParam("sparsity_beta", tunable = FALSE),
+      # makeLogicalLearnerParam("sparsity_beta", tunable = FALSE),
       makeLogicalLearnerParam("reproducible", default = FALSE, tunable = FALSE),
       makeLogicalLearnerParam("export_weights_and_biases", default = FALSE, tunable = FALSE)
     ),
-    properties = c("numerics", "factors", "weights"),
+    properties = c("numerics", "factors", "weights", "missings"),
     name = "h2o.deeplearning",
-    short.name = "h2o.dl"
+    short.name = "h2o.dl",
+    note = 'The default value of `missing_values_handling` is `"MeanImputation"`, so missing values are automatically mean-imputed.',
+    callees = "h2o.deeplearning"
   )
 }
 
 #' @export
 trainLearner.regr.h2o.deeplearning = function(.learner, .task, .subset, .weights = NULL, ...) {
+
   # check if h2o connection already exists, otherwise start one
-  conn.up = tryCatch(h2o::h2o.getConnection(), error = function(err) return(FALSE))
+  conn.up = tryCatch(h2o::h2o.getConnection(), error = function(err) {
+    return(FALSE)
+  })
   if (!inherits(conn.up, "H2OConnection")) {
     h2o::h2o.init()
-  }   
+  }
   y = getTaskTargetNames(.task)
   x = getTaskFeatureNames(.task)
   d = getTaskData(.task, subset = .subset)
@@ -258,6 +263,5 @@ predictLearner.regr.h2o.deeplearning = function(.learner, .model, .newdata, ...)
   h2of = h2o::as.h2o(.newdata)
   p = h2o::h2o.predict(m, newdata = h2of, ...)
   p.df = as.data.frame(p)
-  return(p.df$predict) 
+  return(p.df$predict)
 }
-

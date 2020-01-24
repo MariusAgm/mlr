@@ -7,20 +7,20 @@
 makeMulticlassWrapper(learner, mcw.method = "onevsrest")
 }
 \arguments{
-\item{learner}{[\code{\link{Learner}} | \code{character(1)}]\cr
+\item{learner}{(\link{Learner} | \code{character(1)})\cr
 The learner.
-If you pass a string the learner will be created via \code{\link{makeLearner}}.}
+If you pass a string the learner will be created via \link{makeLearner}.}
 
-\item{mcw.method}{[character(1) | function] \cr
+\item{mcw.method}{(\code{character(1)} | \code{function}) \cr
 \dQuote{onevsone} or \dQuote{onevsrest}.
-You can also pass a function, with signature \code{function(task)} and which
+You can also pass a function, with signature \verb{function(task)} and which
 returns a ECOC codematrix with entries +1,-1,0.
 Columns define new binary problems, rows correspond to classes (rows must be named).
 0 means class is not included in binary problem.
 Default is \dQuote{onevsrest}.}
 }
 \value{
-[\code{\link{Learner}}].
+\link{Learner}.
 }
 \description{
 Fuses a base learner with a multi-class method.
@@ -40,26 +40,30 @@ of the binary base models (instead of their probabilities) and the created
 wrapper cannot predict posterior probabilities.
 }
 \seealso{
-Other wrapper: \code{\link{makeBaggingWrapper}},
-  \code{\link{makeConstantClassWrapper}},
-  \code{\link{makeCostSensClassifWrapper}},
-  \code{\link{makeCostSensRegrWrapper}},
-  \code{\link{makeDownsampleWrapper}},
-  \code{\link{makeFeatSelWrapper}},
-  \code{\link{makeFilterWrapper}},
-  \code{\link{makeImputeWrapper}},
-  \code{\link{makeMultilabelBinaryRelevanceWrapper}},
-  \code{\link{makeMultilabelClassifierChainsWrapper}},
-  \code{\link{makeMultilabelDBRWrapper}},
-  \code{\link{makeMultilabelNestedStackingWrapper}},
-  \code{\link{makeMultilabelStackingWrapper}},
-  \code{\link{makeOverBaggingWrapper}},
-  \code{\link{makePreprocWrapperCaret}},
-  \code{\link{makePreprocWrapper}},
-  \code{\link{makeRemoveConstantFeaturesWrapper}},
-  \code{\link{makeSMOTEWrapper}},
-  \code{\link{makeTuneWrapper}},
-  \code{\link{makeUndersampleWrapper}},
-  \code{\link{makeWeightedClassesWrapper}}
+Other wrapper: 
+\code{\link{makeBaggingWrapper}()},
+\code{\link{makeClassificationViaRegressionWrapper}()},
+\code{\link{makeConstantClassWrapper}()},
+\code{\link{makeCostSensClassifWrapper}()},
+\code{\link{makeCostSensRegrWrapper}()},
+\code{\link{makeDownsampleWrapper}()},
+\code{\link{makeDummyFeaturesWrapper}()},
+\code{\link{makeExtractFDAFeatsWrapper}()},
+\code{\link{makeFeatSelWrapper}()},
+\code{\link{makeFilterWrapper}()},
+\code{\link{makeImputeWrapper}()},
+\code{\link{makeMultilabelBinaryRelevanceWrapper}()},
+\code{\link{makeMultilabelClassifierChainsWrapper}()},
+\code{\link{makeMultilabelDBRWrapper}()},
+\code{\link{makeMultilabelNestedStackingWrapper}()},
+\code{\link{makeMultilabelStackingWrapper}()},
+\code{\link{makeOverBaggingWrapper}()},
+\code{\link{makePreprocWrapperCaret}()},
+\code{\link{makePreprocWrapper}()},
+\code{\link{makeRemoveConstantFeaturesWrapper}()},
+\code{\link{makeSMOTEWrapper}()},
+\code{\link{makeTuneWrapper}()},
+\code{\link{makeUndersampleWrapper}()},
+\code{\link{makeWeightedClassesWrapper}()}
 }
-
+\concept{wrapper}

@@ -12,14 +12,15 @@ makeRLearner.regr.mars = function() {
       makeLogicalLearnerParam(id = "trace.mars", default = FALSE, tunable = FALSE),
       makeLogicalLearnerParam(id = "forward.step", default = TRUE)
     ),
-    properties = c("numerics"),
+    properties = "numerics",
     name = "Multivariate Adaptive Regression Splines",
-    short.name = "mars"
+    short.name = "mars",
+    callees = "mars"
   )
 }
 
 #' @export
-trainLearner.regr.mars = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.mars = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE)
   mda::mars(x = as.matrix(d$data), y = d$target, ...)
 }

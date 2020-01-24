@@ -2,7 +2,7 @@
 makeRLearner.classif.bst = function() {
   makeRLearnerClassif(
     cl = "classif.bst",
-    package = "bst",
+    package = c("bst", "rpart"),
     par.set = makeParamSet(
       makeNumericLearnerParam(id = "cost", default = 0.5, lower = 0, upper = 1),
       makeDiscreteLearnerParam(id = "family", values = c("gaussian", "hinge")),
@@ -32,7 +32,8 @@ makeRLearner.classif.bst = function() {
     properties = c("numerics", "twoclass"),
     name = "Gradient Boosting",
     short.name = "bst",
-    note = 'Renamed parameter `learner` to `Learner` due to nameclash with `setHyperPars`. Default changes: `Learner = "ls"`, `xval = 0`, and `maxdepth = 1`.'
+    note = 'Renamed parameter `learner` to `Learner` due to nameclash with `setHyperPars`. Default changes: `Learner = "ls"`, `xval = 0`, and `maxdepth = 1`.',
+    callees = c("bst", "bst_control", "rpart.control")
   )
 }
 
@@ -42,7 +43,7 @@ trainLearner.classif.bst = function(.learner, .task, .subset, .weights = NULL, m
   usesurrogate, surrogatestyle, maxdepth, xval, Learner, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE, recode.target = "-1+1")
   ctrl = learnerArgsToControl(bst::bst_control, mstop, nu, twinboost, f.init, xselect.init, center, trace, numsample, df)
-  control.tree = learnerArgsToControl(list,  minsplit, minbucket, cp, maxsurrogate, usesurrogate, surrogatestyle, maxdepth, xval)
+  control.tree = learnerArgsToControl(list, minsplit, minbucket, cp, maxsurrogate, usesurrogate, surrogatestyle, maxdepth, xval)
   bst::bst(x = d$data, y = d$target, ctrl = ctrl, control.tree = control.tree, learner = Learner, ...)
 }
 

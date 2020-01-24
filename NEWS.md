@@ -1,3 +1,384 @@
+# mlr 2.17.0.9001
+
+* Fix `print.FeatSelResult()` when bits.to.features is used in `selectFeatures()` (#2721)
+* Return a long DF for `getFeatureImportance()` (#2708)
+* Remove adjusted Rsq measure (arsq), fixes #2711
+* `listLearners()` should not fail if a package is not installed (#2717)
+
+
+# mlr 2.17.0.9000
+
+## filters - bugfixes
+
+- Fixed an issue which caused the random forest minimal depth filter to only return NA values when using thresholding. 
+  NAs should only be returned for features below the given threshold. (@annette987, #2710)
+- Fixed problem which prevented passing filter options via argument `more.args` for simple filters (@annette987, #2709)
+  
+# mlr 2.17.0
+
+## plotting
+
+* `n.show` argument had no effect in `plotFilterValues()`. Thanks @albersonmiranda. (#2689)
+
+## Functional Data
+
+PR: #2638 (@pfistl)
+- Added several learners for regression and classification on functional data
+  - classif.classiFunc.(kernel|knn) (knn/kernel using various semi-metrics)
+  - (classif|regr).fgam (Functional generalized additive models)
+  - (classif|regr).FDboost (Boosted functional generalized additive models)
+
+- Added preprocessing steps for feature extraction from functional data
+  - extractFDAFourier (Fourier transform)
+  - extractFDAWavelets (Wavelet features)
+  - extractFDAFPCA (Principal components)
+  - extractFDATsfeatures (Time-Series features from tsfeatures package)
+  - extractFDADTWKernel (Dynamic Time-Warping Kernel)
+  - extractFDAMultiResFeatures (Compute features at multiple resolutions)
+
+- Fixed a bug where multiclass to binaryclass reduction techniques did not work
+  with functional data.
+
+- Several other minor bug fixes and code improvements
+- Extended and clarified documentation for several fda components.
+
+## learners - general
+
+- xgboost: added options 'auto', 'approx' and 'gpu_hist' to param `tree_method` (@albersonmiranda, #2701)
+- `getFeatureImportance()` now returns a long data.frame with columns `variable` and `importance`.
+  Beforehand, a wide data.frame was returned with each variable representing a column (@pat-s, #1755).
+
+## filters - general
+
+- Allow a custom threholding function to be passed to filterFeatures and makeFilterWrapper (@annette987, #2686)
+- Allow ensemble filters to include multiple base filters of the same type (@annette987, #2688)
+
+## filters - bugfixes
+
+- `filterFeatures()`: Arg `thresh` was not working correctly when applied to ensemble filters. (@annette987, #2699)
+- Fixed incorrect ranking of ensemble filters. Thanks @annette987 (#2698)
+
+# mlr 2.16.0
+
+## package infrastructure
+
+- There is now a reference grouping for all functions on the pkgdown site (https://mlr.mlr-org.com/reference/index.html)
+- CI testing now only on Circle CI (previously Travis CI)
+
+## learners - general
+
+- fixed a bug in `classif.xgboost` which prevented passing a watchlist for binary tasks. This was caused by a suboptimal internal label inversion approach. Thanks to @001ben for reporting (#32) (@mllg)
+- update `fda.usc` learners to work with package version >=2.0
+- update `glmnet` learners to upstream package version 3.0.0
+- update `xgboost` learners to upstream version 0.90.2 (@pat-s & @be-marc, #2681)
+- Updated ParamSet for learners `classif.gbm` and `regr.gbm`. Specifically, param `shrinkage` now defaults to 0.1 instead of 0.001. Also more choices for param `distribution` have been added. Internal parallelization by the package is now suppressed (param `n.cores`). (@pat-s, #2651)
+- Update parameters for `h2o.deeplearning` learners (@albersonmiranda, #2668)
+
+## misc
+
+- Add `configureMlr()` to `.onLoad()`, possibly fixing some edge cases (#2585) (@pat-s, #2637)
+
+## learners - bugfixes
+
+- `h2o.gbm` learners were not running until `wcol` was passed somehow due to an internal bug. In addition, this bug caused another issue during prediction where the prediction `data.frame` was somehow formatted as a character rather a numeric. Thanks to @nagdevAmruthnath for bringing this up in #2630.
+
+## filters - general
+
+- Bugfix: Allow `method = "vh"` for filter `randomForestSRC_var.select` and return informative error message for not supported values. Also argument `conservative` can now be passed. See #2646 and #2639 for more information (@pat-s, #2649)
+- Bugfix: Allow `method = "md"` of filter `randomForestSRC_var.select` to set the value returned for features below its threshold to NA (Issue #2687)
+* Bugfix: With the new _praznik_ v7.0.0 release filter `praznik_CMIM` does no longer return a result for logical features. See https://gitlab.com/mbq/praznik/issues/19 for more information
+
+# mlr 2.15.0
+
+## Breaking
+
+- Instead of a wide `data.frame` filter values are now returned in a long (tidy) `tibble`. This makes it easier to apply post-processing methods (like `group_by()`, etc) (@pat-s, #2456)
+- `benchmark()` does not store the tuning results (`$extract` slot) anymore by default.
+  If you want to keep this slot (e.g. for post tuning analysis), set `keep.extract = TRUE`.
+  This change originated from the fact that the size of `BenchmarkResult` objects with extensive tuning got very large (~ GB) which can cause memory problems during runtime if multiple `benchmark()` calls are executed on HPCs.
+- `benchmark()` does not store the created models (`$models` slot) anymore by default.
+  The reason is the same as for the `$extract` slot above.
+  Storing can be enabled using `models = TRUE`.
+
+## functions - general
+
+- `generateFeatureImportanceData()` gains argument `show.info` which shows the name of the current feature being calculated, its index in the queue and the elapsed time for each feature (@pat-s, #26222)
+
+## learners - general
+
+- `classif.liquidSVM` and `regr.liquidSVM` have been removed because `liquidSVM` has been removed from CRAN.
+- fixed a bug that caused an incorrect aggregation of probabilities in some cases. The bug existed since quite some time and was exposed due to the change of `data.table`s default in `rbindlist()`. See #2578 for more information. (@mllg, #2579)
+- `regr.randomForest` gains three new methods to estimate the standard error:
+  - `se.method = "jackknife"`
+  - `se.method = "bootstrap"`
+  - `se.method = "sd"`
+  See `?regr.randomForest` for more details.
+  `regr.ranger` relies on the functions provided by the package ("jackknife" and "infjackknife" (default))
+  (@jakob-r, #1784)
+- `regr.gbm` now supports `quantile distribution` (@bthieurmel, #2603)
+- `classif.plsdaCaret` now supports multiclass classification (@GegznaV, #2621)
+
+## functions - general
+- `getClassWeightParam()` now also works for Wrapper* Models and ensemble models (@ja-thomas, #891)
+- added `getLearnerNote()` to query the "Note" slot of a learner (@alona-sydorova, #2086)
+- `e1071::svm()` now only uses the formula interface if factors are present. This change is supposed to prevent from "stack overflow" issues some users encountered when using large datasets. See #1738 for more information. (@mb706, #1740)
+
+## learners - new
+- add learner `cluster.MiniBatchKmeans` from package _ClusterR_ (@Prasiddhi, #2554)
+
+## function - general
+- `plotHyperParsEffect()` now supports facet visualization of hyperparam effects for nested cv (@MasonGallo, #1653)
+- fixed a bug that caused an incorrect aggregation of probabilities in some cases. The bug existed since quite some time and was exposed due to the change of `data.table`s default in `rbindlist()`. See #2578 for more information. (@mllg, #2579)
+- fixed a bug in which `options(on.learner.error)` was not respected in `benchmark()`. This caused `benchmark()` to stop even if it should have continued including `FailureModels` in the result (@dagola, #1984)
+- `getClassWeightParam()` now also works for Wrapper* Models and ensemble models (@ja-thomas, #891)
+- added `getLearnerNote()` to query the "Note" slot of a learner (@alona-sydorova, #2086)
+
+## filters - general
+
+- Filter `praznik_mrmr` also supports `regr` and `surv` tasks
+- `plotFilterValues()` got a bit "smarter" and easier now regarding the ordering of multiple facets. (@pat-s, #2456)
+- `filterFeatures()`, `generateFilterValuesData()` and `makeFilterWrapper()` gained new examples. (@pat-s, #2456)
+
+## filters - new
+
+- Ensemble features are now supported. These filters combine multiple single filters to create a final ranking based on certain statistical operations. All new filters are listed in a dedicated section "ensemble filters" in the [tutorial](https://mlr.mlr-org.com/articles/tutorial/filter_methods.html).
+Tuning of simple features is not supported yet because of a [missing feature](https://github.com/berndbischl/ParamHelpers/pull/206) in _ParamHelpers_. (@pat-s, #2456)
+
+# mlr 2.14.0
+
+## general
+* add option to use fully predefined indices in resampling (`makeResampleDesc(fixed = TRUE)`) (@pat-s, #2412).
+* `Task` help pages are now split into separate ones, e.g. `RegrTask`, `ClassifTask` (@pat-s, #2564)
+
+## functions - new
+* `deleteCacheDir()`: Clear the default mlr cache directory (@pat-s, #2463)
+* `getCacheDir()`: Return the default mlr cache directory (@pat-s, #2463)
+
+## functions - general
+* `getResamplingIndices(inner = TRUE)` now correctly returns the inner indices (before inner indices referred to the subset of the respective outer level train set) (@pat-s, #2413).
+
+## filter - general
+* Caching is now used when generating filter values.
+  This means that filter values are only computed once for a specific setting and the stored cache is used in subsequent iterations.
+  This change inherits a significant speed-up when tuning `fw.perc`, `fw.abs` or `fw.threshold`.
+  It can be triggered with the new `cache` argument in `makeFilterWrapper()` or `filterFeatures()` (@pat-s, #2463).
+
+## filter - new
+* praznik_JMI
+* praznik_DISR
+* praznik_JMIM
+* praznik_MIM
+* praznik_NJMIM
+* praznik_MRMR
+* praznik_CMIM
+* FSelectorRcpp_gain.ratio
+* FSelectorRcpp_information.gain
+* FSelectorRcpp_symuncert
+
+Additionally, filter names have been harmonized using the following scheme: <pkgname>_<filtername>.
+Exeptions are filters included in base R packages.
+In this case, the package name is omitted.
+
+## filter - general
+* Added filters `FSelectorRcpp_gain.ratio`, `FSelectorRcpp_information.gain` and `FSelectorRcpp_symmetrical.uncertainty` from package `FSelectorRcpp`.
+  These filters are ~ 100 times faster than the implementation of the `FSelector` pkg.
+  Please note that both implementations do things slightly different internally and the `FSelectorRcpp` methods should not be seen as direct replacement for the `FSelector` pkg.
+* filter names have been harmonized using the following scheme: <pkgname>_<filtername>. (@pat-s, #2533)
+  - `information.gain` -> `FSelector_information.gain`
+  - `gain.ratio` -> `FSelector_gain.ratio`
+  - `symmetrical.uncertainty` -> `FSelector_symmetrical.uncertainty`
+  - `chi.squared` -> `FSelector_chi.squared`
+  - `relief` -> `FSelector_relief`
+  - `oneR` -> `FSelector_oneR`
+  - `randomForestSRC.rfsrc` -> `randomForestSRC_importance`
+  - `randomForestSRC.var.select` -> `randomForestSRC_var.select`
+  - `randomForest.importance` -> `randomForest_importance`
+
+* fixed a bug related to the loading of namespaces for required filter packages (@pat-s, #2483)
+
+## learners - new
+* classif.liquidSVM (@PhilippPro, #2428)
+* regr.liquidSVM (@PhilippPro, #2428)
+
+## learners - general
+* regr.h2o.gbm: Various parameters added, `"h2o.use.data.table" = TRUE` is now the default (@j-hartshorn, #2508)
+* h2o learners now support getting feature importance (@markusdumke, #2434)
+
+## learners - fixes
+* In some cases the optimized hyperparameters were not applied in the performance level of a nested CV (@berndbischl, #2479)
+
+## featSel - general
+ * The FeatSelResult object now contains an additional slot `x.bit.names` that stores the optimal bits
+ * The slot `x` now always contains the real feature names and not the bit.names
+ * This fixes a bug and makes `makeFeatSelWrapper` usable with custom `bit.names`.
+ * Fixed a bug due to which `sffs` crashed in some cases (@bmihaljevic, #2486)
+
+# mlr 2.13:
+
+## general
+* Disabled unit tests for CRAN, we test on travis only now
+* Suppress messages with show.learner.output = FALSE
+
+## functions - general
+* plotHyperParsEffect: add colors
+
+## functions - new
+* getResamplingIndices
+* createSpatialResamplingPlots
+
+## learners - general
+*  regr.nnet: Removed unneeded params linout, entropy, softmax and censored
+*  regr.ranger: Add weight handling
+
+## learners - removed
+* {classif,regr}.blackboost: broke API with new release
+* regr.elmNN : package was removed from CRAN
+* classif.lqa : package was removed from CRAN
+
+
+# mlr 2.12:
+
+## general
+* Support for functional data (fda) using matrix columns has been added.
+* Relaxed the way wrappers can be nested -- the only explicitly forbidden
+  combination is to wrap a tuning wrapper around another optimization wrapper
+* Refactored the resample progress messages to give a better overview and
+  distinguish between train and test measures better
+* calculateROCMeasures now returns absolute instead of relative values
+* Added support for spatial data by providing spatial partitioning methods "SpCV" and "SpRepCV".
+* Added new spatial.task classification task.
+* Added new spam.task classification task.
+* Classification tasks now store the class distribution in the
+  class.distribution member.
+* mlr now predicts NA for data that contains NA and learners that do not support
+  missing values.
+* Tasks are now subsetted in the "train" function and the factor levels (for
+  classification tasks) based on this subset. This means that the factor level
+  distribution is not necessarily the same as for the entire task, and that the
+  task descriptions of models in resampling reflect the respective subset, while
+  the task description of resample predictions reflect the entire task and not
+  necessarily the task of any individual model.
+* Added support for growing and fixed window cross-validation for forecasting
+  through new resample methods "GrowingWindowCV" and "FixedWindowCV".
+
+## functions - general
+* generatePartialDependenceData: depends now on the "mmpf" package,
+  removed parameter: "center", "resample", "fmin", "fmax" and "gridsize"
+  added parameter: "uniform" and "n" to configure the grid for the partial dependence plot
+* batchmark: allow resample instances and reduction of partial results
+* resample, performance: new flag "na.rm" to remove NAs during aggregation
+* plotTuneMultiCritResultGGVIS: new parameters "point.info" and "point.trafo" to
+  control interactivity
+* calculateConfusionMatrix: new parameter "set" to specify whether confusion
+  matrix should be computed for "train", "test", or "both" (default)
+* PlotBMRSummary: Add parameter "shape"
+* plotROCCurves: Add faceting argument
+* PreprocWrapperCaret: Add param "ppc.corr", "ppc.zv", "ppc.nzv", "ppc.n.comp", "ppc.cutoff", "ppc.freqCut", "ppc.uniqueCut"
+
+## functions - new
+* makeClassificationViaRegressionWrapper
+* getPredictionTaskDesc
+* helpLearner, helpLearnerParam: open the help for a learner or get a
+  description of its parameters
+* setMeasurePars
+* makeFunctionalData
+* hasFunctionalFeatures
+* extractFDAFeatures, reextractFDAFeatures
+* extractFDAFourier, extractFDAFPCA, extractFDAMultiResFeatures, extractFDAWavelets
+* makeExtractFDAFeatMethod
+* makeExtractFDAFeatsWrapper
+* getTuneResultOptPath
+* makeTuneMultiCritControlMBO: Allows model based multi-critera / multi-objective optimization using mlrMBO
+
+## functions - removed
+* Removed plotViperCharts
+
+## measures - general
+* measure "arsq" now has ID "arsq"
+* measure "measureMultiLabelF1" was renamed to "measureMultilabelF1" for consistency
+
+## measures - new
+* measureBER, measureRMSLE, measureF1
+* cindex.uno, iauc.uno
+
+## learners - general
+* unified {classif,regr,surv}.penalized{ridge,lasso,fusedlasso} into {classif,regr,surv}.penalized
+* fixed a bug where surv.cforest gave wrong risk predictions (#1833)
+* fixed bug where classif.xgboost returned NA predictions with multi:softmax
+* classif.lda learner: add 'prior' hyperparameter
+* ranger: update hyperpar 'respect.unordered.factors', add 'extratrees' and 'num.random.splits'
+* h20deeplearning: Rename hyperpar 'MeanSquare' to 'Quadratic'
+* h20*: Add support for "missings"
+
+## learners - new
+* classif.adaboostm1
+* classif.fdaknn
+* classif.fdakernel
+* classif.fdanp
+* classif.fdaglm
+* classif.mxff
+* regr.fdaFDboost
+* regr.mxff
+
+## learners - removed
+* {classif,regr}.bdk: broke our API, stability issues
+* {classif,regr}.xyf: broke our API, stability issues
+* classif.hdrda: package removed from CRAN
+* surv.penalized: stability issues
+
+## aggregations - new
+* testgroup.sd
+
+## filter - new
+* auc
+* ranger.permutation, ranger.impurity
+
+# mlr 2.11:
+
+## general
+* The internal class naming of the task descriptions have been changed causing probable incompatibilities with tasks generated under old versions.
+* New option on.error.dump to include dumps that can be inspected with the
+  debugger with errors
+* mlr now supports tuning with Bayesian optimization with mlrMBO
+
+## functions - general
+* tuneParams: fixed a small and obscure bug in logging for extremely large ParamSets
+* getBMR-operators: now support "drop" argument that simplifies the resulting list
+* configureMlr: added option "on.measure.not.applicable" to handle situations where performance
+  cannot be calculated and one wants NA instead of an error - useful in, e.g., larger benchmarks
+* tuneParams, selectFeatures: removed memory stats from default output for
+  performance reasons (can be restored by using a control object with "log.fun"
+  = "memory")
+* listLearners: change check.packages default to FALSE
+* tuneParams and tuneParamsMultiCrit: new parameter `resample.fun` to specify a custom resampling function to use.
+* Deprecated: getTaskDescription, getBMRTaskDescriptions, getRRTaskDescription.
+  New names: getTaskDesc, getBMRTaskDescs, getRRTaskDesc.
+
+## functions - new
+* getOOBPreds: get out-of-bag predictions from trained models for learners that store them -- these learners have the new "oobpreds" property
+* listTaskTypes, listLearnerProperties
+* getMeasureProperties, hasMeasureProperties, listMeasureProperties
+* makeDummyFeaturesWrapper: fuse a learner with a dummy feature creator
+* simplifyMeasureNames: shorten measure names to the actual measure, e.g.
+  mmce.test.mean -> mmce
+* getFailureModelDump, getPredictionDump, getRRDump: get error dumps
+* batchmark: Function to run benchmarks with the batchtools package on high performance computing clusters
+* makeTuneControlMBO: allows Bayesian optimization
+
+## measures - new
+* kendalltau, spearmanrho
+
+## learners - general
+* classif.plsdaCaret: added parameter "method".
+* regr.randomForest: refactored se-estimation code, improved docs and default is now se.method = "jackknife".
+* regr.xgboost, classif.xgboost: removed "factors" property as these learners do not handle categorical features
+-- factors are silently converted to integers internally, which may misinterpret the structure of the data
+* glmnet: control parameters are reset to factory settings before applying
+  custom settings and training and set back to factory afterwards
+
+## learners - removed
+* {classif,regr}.avNNet: no longer necessary, mlr contains a bagging wrapper
+
 # mlr 2.10:
 
 ## functions - general
@@ -41,6 +422,11 @@
 * createDummyFeatures supports vectors now
 * removed the pretty.names argument from plotHyperParsEffect -- labels can be set
   though normal ggplot2 functions on the returned object
+* Fixed a bad bug in resample, the slot "runtime" or a ResampleResult,
+  when the runtime was measured not in seconds but e.g. mins. R measures then potentially in mins,
+  but mlr claimed it would be seconds.
+* New "dummy" learners (that disregard features completely) can be fitted now for baseline comparisons,
+  see "featureless" learners below.
 
 ## functions - new
 * filter: randomForest.importance
@@ -85,6 +471,8 @@
 * regr.cvglmnet
 * {classif,regr,surv}.gamboost
 * classif.earth
+* {classif,regr}.evtree
+* {classif,regr}.evtree
 
 ## learners - removed
 * classif.randomForestSRCSyn, regr.randomForestSRCSyn: due to continued stability issues
@@ -259,7 +647,7 @@
   this is the new API:
   plotBMRSummary, plotBMRBoxplots, plotBMRRanksAsBarChart
 
-# mlr_2.6:
+# mlr 2.6:
 * cluster.kmeans: added support for fuzzy clustering (property "prob")
 * regr.lm: removed some erroneous param settings
 * regr.glmnet: added 'family' param and allowed 'gaussian', but also 'poisson'
@@ -734,9 +1122,5 @@
 * makeSurvTask
 * impute, reimpute, makeImputeWrapper, lots of impute<Method>, makeImputeMethod
 
-# mlr 1.1:
+# mlr 1.1-18:
 * Initial release to CRAN
-
-
-
-

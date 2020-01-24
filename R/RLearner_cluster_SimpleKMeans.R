@@ -22,14 +22,15 @@ makeRLearner.cluster.SimpleKMeans = function() {
       makeLogicalLearnerParam(id = "V", default = FALSE, tunable = FALSE),
       makeLogicalLearnerParam(id = "output-debug-info", default = FALSE, tunable = FALSE)
     ),
-    properties = c("numerics"),
+    properties = "numerics",
     name = "K-Means Clustering",
-    short.name = "simplekmeans"
+    short.name = "simplekmeans",
+    callees = c("SimpleKMeans", "Weka_control")
   )
 }
 
 #' @export
-trainLearner.cluster.SimpleKMeans = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.cluster.SimpleKMeans = function(.learner, .task, .subset, .weights = NULL, ...) {
   ctrl = RWeka::Weka_control(...)
   RWeka::SimpleKMeans(getTaskData(.task, .subset), control = ctrl)
 }
@@ -39,4 +40,3 @@ predictLearner.cluster.SimpleKMeans = function(.learner, .model, .newdata, ...) 
   # SimpleKMeans returns cluster indices (i.e. starting from 0, which some tools don't like
   as.integer(predict(.model$learner.model, .newdata, ...)) + 1L
 }
-

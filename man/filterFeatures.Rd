@@ -4,54 +4,117 @@
 \alias{filterFeatures}
 \title{Filter features by thresholding filter values.}
 \usage{
-filterFeatures(task, method = "randomForestSRC.rfsrc", fval = NULL,
-  perc = NULL, abs = NULL, threshold = NULL, mandatory.feat = NULL, ...)
+filterFeatures(
+  task,
+  method = "randomForestSRC_importance",
+  fval = NULL,
+  perc = NULL,
+  abs = NULL,
+  threshold = NULL,
+  fun = NULL,
+  fun.args = NULL,
+  mandatory.feat = NULL,
+  select.method = NULL,
+  base.methods = NULL,
+  cache = FALSE,
+  ...
+)
 }
 \arguments{
-\item{task}{[\code{\link{Task}}]\cr
+\item{task}{(\link{Task})\cr
 The task.}
 
-\item{method}{[\code{character(1)}]\cr
-See \code{\link{listFilterMethods}}.
-Default is \dQuote{randomForestSRC.rfsrc}.}
+\item{method}{(\code{character(1)})\cr
+See \link{listFilterMethods}.
+Default is \dQuote{randomForestSRC_importance}.}
 
-\item{fval}{[\code{\link{FilterValues}}]\cr
-Result of \code{\link{generateFilterValuesData}}.
-If you pass this, the filter values in the object are used for feature filtering.
+\item{fval}{(\link{FilterValues})\cr
+Result of \link{generateFilterValuesData}.
+If you pass this, the filter values in the object are used for feature
+filtering.
 \code{method} and \code{...} are ignored then.
 Default is \code{NULL} and not used.}
 
-\item{perc}{[\code{numeric(1)}]\cr
+\item{perc}{(\code{numeric(1)})\cr
 If set, select \code{perc}*100 top scoring features.
-Mutually exclusive with arguments \code{abs} and \code{threshold}.}
+\code{perc = 1} means to select all features.\verb{Mutually exclusive with arguments}abs\verb{, }threshold\code{and}fun`.}
 
-\item{abs}{[\code{numeric(1)}]\cr
+\item{abs}{(\code{numeric(1)})\cr
 If set, select \code{abs} top scoring features.
-Mutually exclusive with arguments \code{perc} and \code{threshold}.}
+Mutually exclusive with arguments \code{perc}, \code{threshold} and \code{fun}.}
 
-\item{threshold}{[\code{numeric(1)}]\cr
+\item{threshold}{(\code{numeric(1)})\cr
 If set, select features whose score exceeds \code{threshold}.
-Mutually exclusive with arguments \code{perc} and \code{abs}.}
+Mutually exclusive with arguments \code{perc}, \code{abs} and \code{fun}.}
 
-\item{mandatory.feat}{[\code{character}]\cr
+\item{fun}{(\code{function})\cr
+If set, select features via a custom thresholding function, which must
+return the number of top scoring features to select. Mutually exclusive
+with arguments \code{perc}, \code{abs} and \code{threshold}.}
+
+\item{fun.args}{(any)\cr
+Arguments passed to the custom thresholding function.}
+
+\item{mandatory.feat}{(\link{character})\cr
 Mandatory features which are always included regardless of their scores}
 
-\item{...}{[any]\cr
+\item{select.method}{If multiple methods are supplied in argument \code{method},
+specify the method that is used for the final subsetting.}
+
+\item{base.methods}{If \code{method} is an ensemble filter, specify the base
+filter methods which the ensemble method will use.}
+
+\item{cache}{(\code{character(1)} | \link{logical})\cr
+Whether to use caching during filter value creation. See details.}
+
+\item{...}{(any)\cr
 Passed down to selected filter method.}
 }
 \value{
-[\code{\link{Task}}].
+\link{Task}.
 }
 \description{
-First, calls \code{\link{generateFilterValuesData}}.
+First, calls \link{generateFilterValuesData}.
 Features are then selected via \code{select} and \code{val}.
 }
-\seealso{
-Other filter: \code{\link{generateFilterValuesData}},
-  \code{\link{getFilterValues}},
-  \code{\link{getFilteredFeatures}},
-  \code{\link{makeFilterWrapper}},
-  \code{\link{plotFilterValuesGGVIS}},
-  \code{\link{plotFilterValues}}
+\section{Caching}{
+
+If \code{cache = TRUE}, the default mlr cache directory is used to cache
+filter values. The directory is operating system dependent and can be
+checked with \code{getCacheDir()}.\cr
+The default cache can be cleared with \code{deleteCacheDir()}.
+Alternatively, a custom directory can be passed to store the cache.
+
+Note that caching is not thread safe. It will work for parallel
+computation on many systems, but there is no guarantee.
 }
 
+\section{Simple and ensemble filters}{
+
+
+Besides passing (multiple) simple filter methods you can also pass an
+ensemble filter method (in a list). The ensemble method will use the simple
+methods to calculate its ranking. See \code{listFilterEnsembleMethods()} for
+available ensemble methods.
+}
+
+\examples{
+# simple filter
+filterFeatures(iris.task, method = "FSelectorRcpp_gain.ratio", abs = 2)
+# ensemble filter
+filterFeatures(iris.task, method = "E-min",
+  base.methods = c("FSelectorRcpp_gain.ratio",
+    "FSelectorRcpp_information.gain"), abs = 2)
+}
+\seealso{
+Other filter: 
+\code{\link{generateFilterValuesData}()},
+\code{\link{getFilteredFeatures}()},
+\code{\link{listFilterEnsembleMethods}()},
+\code{\link{listFilterMethods}()},
+\code{\link{makeFilterEnsemble}()},
+\code{\link{makeFilterWrapper}()},
+\code{\link{makeFilter}()},
+\code{\link{plotFilterValues}()}
+}
+\concept{filter}

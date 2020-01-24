@@ -21,10 +21,10 @@ test_that("regr_bcart", {
   df.factor = createDummyFeatures(df.factor, method = "reference")
   df = cbind(df.num, df.factor)
   train = df[regr.train.inds, ]
-  test  = df[regr.test.inds, ]
+  test = df[regr.test.inds, ]
 
   old.predicts.list = list()
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     pars = list(X = train, Z = y, verb = 0, basemax = n.num, pred.n = FALSE)
     pars = c(pars, parset)
@@ -33,5 +33,6 @@ test_that("regr_bcart", {
 
     old.predicts.list[[i]] = predict(m, XX = test, pred.n = FALSE)$ZZ.km
   }
-  testSimpleParsets("regr.bcart", regr.df[, c(2:5, 14)], regr.target, regr.train.inds, old.predicts.list, parset.list)
+  testSimpleParsets("regr.bcart", regr.df[, c(2:5, 14)], regr.target,
+    regr.train.inds, old.predicts.list, parset.list)
 })

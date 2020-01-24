@@ -5,24 +5,24 @@ test_that("surv_rpart", {
 
   parset.list = list(
     list(),
-    list(minsplit=10, cp=0.005),
-    list(minsplit=50, cp=0.05),
-    list(minsplit=50, cp=0.999),
-    list(minsplit=1, cp=0.0005)
+    list(minsplit = 10, cp = 0.005),
+    list(minsplit = 50, cp = 0.05),
+    list(minsplit = 50, cp = 0.999),
+    list(minsplit = 1, cp = 0.0005)
   )
 
   old.predicts.list = list()
   old.probs.list = list()
 
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     pars = list(formula = surv.formula, data = surv.train)
     pars = c(pars, parset)
-    set.seed(getOption("mlr.debug.seed"))
     m = do.call(rpart::rpart, pars)
     p = predict(m, newdata = surv.test)
     old.predicts.list[[i]] = p
   }
 
-  testSimpleParsets("surv.rpart", surv.df, surv.target, surv.train.inds, old.predicts.list, parset.list)
+  testSimpleParsets("surv.rpart", surv.df, surv.target, surv.train.inds,
+    old.predicts.list, parset.list)
 })

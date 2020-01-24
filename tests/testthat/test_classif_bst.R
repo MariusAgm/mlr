@@ -19,16 +19,15 @@ test_that("classif_bst", {
 
   old.predicts.list = list()
 
-  for (i in 1:length(parset.list1)) {
+  for (i in seq_along(parset.list1)) {
     parset = parset.list1[[i]]
     parset$y = ifelse(binaryclass.train[, binaryclass.class.col] == binaryclass.class.levs[2], 1, -1)
     parset$x = binaryclass.train[, -binaryclass.class.col]
-    set.seed(getOption("mlr.debug.seed"))
     m = do.call(bst::bst, parset)
     p = predict(m, binaryclass.test)
     old.predicts.list[[i]] = ifelse(p > 0, binaryclass.class.levs[2], binaryclass.class.levs[1])
   }
 
-  testSimpleParsets("classif.bst", binaryclass.df, binaryclass.target, binaryclass.train.inds,
-    old.predicts.list, parset.list2)
+  testSimpleParsets("classif.bst", binaryclass.df, binaryclass.target,
+    binaryclass.train.inds, old.predicts.list, parset.list2)
 })

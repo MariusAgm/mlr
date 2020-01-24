@@ -33,19 +33,23 @@ makeRLearner.regr.km = function() {
     properties = c("numerics", "se"),
     name = "Kriging",
     short.name = "km",
-    note = 'In predict, we currently always use `type = "SK"`. The extra parameter `jitter` (default is `FALSE`) enables adding a very small jitter (order 1e-12) to the x-values before prediction, as `predict.km` reproduces the exact y-values of the training data points, when you pass them in, even if the nugget effect is turned on. \n We further introduced `nugget.stability` which sets the `nugget` to `nugget.stability * var(y)` before each training to improve numerical stability. We recommend a setting of 10^-8'
+    note = 'In predict, we currently always use `type = "SK"`. The extra parameter `jitter` (default is `FALSE`) enables adding a very small jitter (order 1e-12) to the x-values before prediction, as `predict.km` reproduces the exact y-values of the training data points, when you pass them in, even if the nugget effect is turned on. \n We further introduced `nugget.stability` which sets the `nugget` to `nugget.stability * var(y)` before each training to improve numerical stability. We recommend a setting of 10^-8',
+    callees = "km"
   )
 }
 
 #' @export
-trainLearner.regr.km = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.km = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE)
   args = list(...)
+  if (!is.null(args$optim.method) && args$optim.method == "gen") {
+    requirePackages(packs = "rgenoud", why = "fitting 'regr.km' with 'rgenoud' optimization")
+  }
   if (!is.null(args$nugget.stability)) {
     if (args$nugget.stability == 0) {
       args$nugget = 0
     } else {
-      args$nugget = args$nugget.stability * var(d$target)  
+      args$nugget = args$nugget.stability * var(d$target)
     }
     args$nugget.stability = NULL
   }
@@ -63,8 +67,9 @@ predictLearner.regr.km = function(.learner, .model, .newdata, jitter, ...) {
   }
   se = (.learner$predict.type != "response")
   p = DiceKriging::predict.km(.model$learner.model, newdata = .newdata, type = "SK", se.compute = se)
-  if (!se)
+  if (!se) {
     return(p$mean)
-  else
+  } else {
     cbind(p$mean, p$sd)
+  }
 }

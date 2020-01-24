@@ -14,24 +14,25 @@ test_that("classif_rpart", {
   old.predicts.list = list()
   old.probs.list = list()
 
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     pars = list(formula = multiclass.formula, data = multiclass.train)
     pars = c(pars, parset)
-    set.seed(getOption("mlr.debug.seed"))
     m = do.call(rpart::rpart, pars)
-    p  = predict(m, newdata = multiclass.test, type = "class")
+    p = predict(m, newdata = multiclass.test, type = "class")
     p2 = predict(m, newdata = multiclass.test, type = "prob")
     old.predicts.list[[i]] = p
     old.probs.list[[i]] = p2
   }
 
-  testSimpleParsets("classif.rpart", multiclass.df, multiclass.target, multiclass.train.inds, old.predicts.list, parset.list)
-  testProbParsets  ("classif.rpart", multiclass.df, multiclass.target, multiclass.train.inds, old.probs.list, parset.list)
+  testSimpleParsets("classif.rpart", multiclass.df, multiclass.target,
+    multiclass.train.inds, old.predicts.list, parset.list)
+  testProbParsets("classif.rpart", multiclass.df, multiclass.target,
+    multiclass.train.inds, old.probs.list, parset.list)
 
   tt = rpart::rpart
   tp = function(model, newdata) predict(model, newdata, type = "class")
 
-  testCVParsets("classif.rpart", multiclass.df, multiclass.target, tune.train = tt, tune.predict = tp, parset.list = parset.list)
-
+  testCVParsets("classif.rpart", multiclass.df, multiclass.target,
+    tune.train = tt, tune.predict = tp, parset.list = parset.list)
 })

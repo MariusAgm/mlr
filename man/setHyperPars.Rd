@@ -7,20 +7,22 @@
 setHyperPars(learner, ..., par.vals = list())
 }
 \arguments{
-\item{learner}{[\code{\link{Learner}} | \code{character(1)}]\cr
+\item{learner}{(\link{Learner} | \code{character(1)})\cr
 The learner.
-If you pass a string the learner will be created via \code{\link{makeLearner}}.}
+If you pass a string the learner will be created via \link{makeLearner}.}
 
-\item{...}{[any]\cr
-Named (hyper)parameters with new setting. Alternatively these can be passed
-using the \code{par.vals} argument.}
+\item{...}{(any)\cr Optional named (hyper)parameters. If you want to set
+specific hyperparameters for a learner during model creation, these should
+go here. You can get a list of available hyperparameters using
+\verb{getParamSet(<learner>)}. Alternatively hyperparameters can be given using
+the \code{par.vals} argument but \code{...} should be preferred!}
 
-\item{par.vals}{[\code{list}]\cr
-Optional list of named (hyper)parameter settings. The arguments in
-\code{...} take precedence over values in this list.}
+\item{par.vals}{(\link{list})\cr Optional list of named (hyper)parameters. The
+arguments in \code{...} take precedence over values in this list. We strongly
+encourage you to use \code{...} for passing hyperparameters.}
 }
 \value{
-[\code{\link{Learner}}].
+\link{Learner}.
 }
 \description{
 Set the hyperparameters of a learner object.
@@ -37,19 +39,27 @@ print(cl1)
 print(cl2)
 }
 \seealso{
-Other learner: \code{\link{LearnerProperties}},
-  \code{\link{getClassWeightParam}},
-  \code{\link{getHyperPars}}, \code{\link{getLearnerId}},
-  \code{\link{getLearnerPackages}},
-  \code{\link{getLearnerParVals}},
-  \code{\link{getLearnerParamSet}},
-  \code{\link{getLearnerPredictType}},
-  \code{\link{getLearnerShortName}},
-  \code{\link{getLearnerType}}, \code{\link{getParamSet}},
-  \code{\link{makeLearners}}, \code{\link{makeLearner}},
-  \code{\link{removeHyperPars}}, \code{\link{setId}},
-  \code{\link{setLearnerId}},
-  \code{\link{setPredictThreshold}},
-  \code{\link{setPredictType}}
+Other learner: 
+\code{\link{LearnerProperties}},
+\code{\link{getClassWeightParam}()},
+\code{\link{getHyperPars}()},
+\code{\link{getLearnerId}()},
+\code{\link{getLearnerNote}()},
+\code{\link{getLearnerPackages}()},
+\code{\link{getLearnerParVals}()},
+\code{\link{getLearnerParamSet}()},
+\code{\link{getLearnerPredictType}()},
+\code{\link{getLearnerShortName}()},
+\code{\link{getLearnerType}()},
+\code{\link{getParamSet}()},
+\code{\link{helpLearnerParam}()},
+\code{\link{helpLearner}()},
+\code{\link{makeLearners}()},
+\code{\link{makeLearner}()},
+\code{\link{removeHyperPars}()},
+\code{\link{setId}()},
+\code{\link{setLearnerId}()},
+\code{\link{setPredictThreshold}()},
+\code{\link{setPredictType}()}
 }
-
+\concept{learner}

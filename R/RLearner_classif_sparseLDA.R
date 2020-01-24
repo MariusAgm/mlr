@@ -13,12 +13,13 @@ makeRLearner.classif.sparseLDA = function() {
     properties = c("twoclass", "multiclass", "numerics", "prob"),
     name = "Sparse Discriminant Analysis",
     short.name = "sparseLDA",
-    note = "Arguments `Q` and `stop` are not yet provided as they depend on the task."
+    note = "Arguments `Q` and `stop` are not yet provided as they depend on the task.",
+    callees = "sda"
   )
 }
 
 #' @export
-trainLearner.classif.sparseLDA = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.classif.sparseLDA = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset, target.extra = TRUE)
   y = d$target
   lvls = levels(y)
@@ -30,8 +31,9 @@ trainLearner.classif.sparseLDA = function(.learner, .task, .subset, .weights = N
 predictLearner.classif.sparseLDA = function(.learner, .model, .newdata, ...) {
   p = sparseLDA::predict.sda(.model$learner.model,
     newdata = subset(.newdata, select = .model$features), ...)
-  if (.learner$predict.type == "response")
+  if (.learner$predict.type == "response") {
     return(p$class)
-  else
+  } else {
     return(p$posterior)
+  }
 }

@@ -23,18 +23,19 @@ makeRLearner.classif.mda = function() {
     properties = c("twoclass", "multiclass", "numerics", "factors", "prob"),
     name = "Mixture Discriminant Analysis",
     short.name = "mda",
-    note = '`keep.fitted` has been set to `FALSE` by default for speed and we use `start.method = "lvq"` for more robust behavior / less technical crashes.'
+    note = '`keep.fitted` has been set to `FALSE` by default for speed and we use `start.method = "lvq"` for more robust behavior / less technical crashes.',
+    callees = c("mda", "mda.start")
   )
 }
 
 #' @export
-trainLearner.classif.mda = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.classif.mda = function(.learner, .task, .subset, .weights = NULL, ...) {
   f = getTaskFormula(.task)
   mda::mda(f, data = getTaskData(.task, .subset), ...)
 }
 
 #' @export
 predictLearner.classif.mda = function(.learner, .model, .newdata, ...) {
-  type = ifelse(.learner$predict.type=="response", "class", "posterior")
+  type = ifelse(.learner$predict.type == "response", "class", "posterior")
   predict(.model$learner.model, newdata = .newdata, type = type, ...)
 }

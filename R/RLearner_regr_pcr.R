@@ -15,12 +15,13 @@ makeRLearner.regr.pcr = function() {
     par.vals = list(model = FALSE),
     properties = c("numerics", "factors"),
     name = "Principal Component Regression",
-    short.name = "pcr"
+    short.name = "pcr",
+    callees = "pcr"
   )
 }
 
 #' @export
-trainLearner.regr.pcr = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.pcr = function(.learner, .task, .subset, .weights = NULL, ...) {
   f = getTaskFormula(.task)
   pls::pcr(f, data = getTaskData(.task, .subset), ...)
 }

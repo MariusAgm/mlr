@@ -14,7 +14,8 @@ makeRLearner.classif.LiblineaRL1L2SVC = function() {
     properties = c("twoclass", "multiclass", "numerics", "class.weights"),
     class.weights.param = "wi",
     name = "L1-Regularized L2-Loss Support Vector Classification",
-    short.name = "liblinl1l2svc"
+    short.name = "liblinl1l2svc",
+    callees = "LiblineaR"
   )
 }
 
@@ -26,5 +27,5 @@ trainLearner.classif.LiblineaRL1L2SVC = function(.learner, .task, .subset, .weig
 
 #' @export
 predictLearner.classif.LiblineaRL1L2SVC = function(.learner, .model, .newdata, ...) {
-    as.factor(predict(.model$learner.model, newx = .newdata, ...)$predictions)
+  as.factor(predict(.model$learner.model, newx = .newdata, ...)$predictions)
 }

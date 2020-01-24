@@ -19,7 +19,7 @@ test_that("classif_extraTrees", {
   y = binaryclass.df[binaryclass.train.inds, binaryclass.target]
 
 
-  for (i in 1:length(parset.list)) {
+  for (i in seq_along(parset.list)) {
     parset = parset.list[[i]]
     parset = c(parset, list(x = x.train, y = y))
     set.seed(getOption("mlr.debug.seed"))
@@ -28,8 +28,8 @@ test_that("classif_extraTrees", {
     old.probs.list[[i]] = predict(m, x.test, probability = TRUE)[, 1L]
   }
 
-  testSimpleParsets("classif.extraTrees", binaryclass.df, binaryclass.target, binaryclass.train.inds,
-                    old.predicts.list, parset.list)
-  testProbParsets ("classif.extraTrees", binaryclass.df, binaryclass.target, binaryclass.train.inds,
-                   old.probs.list, parset.list)
+  testSimpleParsets("classif.extraTrees", binaryclass.df, binaryclass.target,
+    binaryclass.train.inds, old.predicts.list, parset.list)
+  testProbParsets("classif.extraTrees", binaryclass.df, binaryclass.target,
+    binaryclass.train.inds, old.probs.list, parset.list)
 })

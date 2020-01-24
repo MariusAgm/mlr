@@ -19,17 +19,18 @@ makeRLearner.regr.rpart = function() {
     properties = c("missings", "numerics", "factors", "ordered", "weights", "featimp"),
     name = "Decision Tree",
     short.name = "rpart",
-    note = "`xval` has been set to `0` by default for speed."
+    note = "`xval` has been set to `0` by default for speed.",
+    callees = c("rpart", "rpart.control")
   )
 }
 
 #' @export
-trainLearner.regr.rpart = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.rpart = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset)
   if (is.null(.weights)) {
     f = getTaskFormula(.task)
     rpart::rpart(f, data = d, ...)
-  } else  {
+  } else {
     f = getTaskFormula(.task)
     rpart::rpart(f, data = d, weights = .weights, ...)
   }
@@ -44,4 +45,3 @@ predictLearner.regr.rpart = function(.learner, .model, .newdata, ...) {
 getFeatureImportanceLearner.regr.rpart = function(.learner, .model, ...) {
   getFeatureImportanceLearner.classif.rpart(.learner, .model, ...)
 }
-

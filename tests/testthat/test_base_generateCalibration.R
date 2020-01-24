@@ -8,9 +8,10 @@ test_that("generateCalibrationData", {
   cd = generateCalibrationData(pred)
   expect_that(cd$proportion, is_a("data.frame"))
   expect_that(cd$data, is_a("data.frame"))
+
   plotCalibration(cd)
   dir = tempdir()
-  path = paste0(dir, "/test.svg")
+  path = file.path(dir, "test.svg")
   ggsave(path)
   doc = XML::xmlParse(path)
   expect_that(length(XML::getNodeSet(doc, red.line.xpath, ns.svg)), equals(length(unique(cd$data$Learner))))
@@ -22,9 +23,10 @@ test_that("generateCalibrationData", {
   cd = generateCalibrationData(r)
   expect_that(cd$proportion, is_a("data.frame"))
   expect_that(cd$data, is_a("data.frame"))
+
   plotCalibration(cd)
   dir = tempdir()
-  path = paste0(dir, "/test.svg")
+  path = file.path(dir, "test.svg")
   ggsave(path)
   doc = XML::xmlParse(path)
   expect_that(length(XML::getNodeSet(doc, red.line.xpath, ns.svg)), equals(length(unique(cd$data$Learner))))
@@ -49,10 +51,11 @@ test_that("generateCalibrationData", {
   doc = XML::xmlParse(path)
   expect_that(length(XML::getNodeSet(doc, grey.rect.xpath, ns.svg)), equals(length(unique(cd$data$Learner))))
   expect_that(length(XML::getNodeSet(doc, red.circle.xpath, ns.svg)), equals(nrow(cd$proportion) + 1))
-  
+
   # facetting works:
   q = q = plotCalibration(cd, facet.wrap.nrow = 2L)
   testFacetting(q, 2L)
+
   q = q = plotCalibration(cd, facet.wrap.ncol = 2L)
   testFacetting(q, ncol = 2L)
 })

@@ -1,5 +1,5 @@
 #' @export
-makeRLearner.regr.rknn = function(){
+makeRLearner.regr.rknn = function() {
   makeRLearnerRegr(
     cl = "regr.rknn",
     package = "rknn",
@@ -14,14 +14,15 @@ makeRLearner.regr.rknn = function(){
     properties = c("numerics", "ordered"),
     name = "Random k-Nearest-Neighbors",
     short.name = "rknn",
-    note =""
+    note = "",
+    callees = "rknnReg"
   )
 }
 
 #' @export
-trainLearner.regr.rknn = function(.learner, .task, .subset, .weights = NULL,  ...){
+trainLearner.regr.rknn = function(.learner, .task, .subset, .weights = NULL, ...) {
   z = getTaskData(.task, .subset, target.extra = TRUE)
-  c(list(data = z$data, y = z$target ), list(...))
+  c(list(data = z$data, y = z$target), list(...))
 }
 
 #' @export

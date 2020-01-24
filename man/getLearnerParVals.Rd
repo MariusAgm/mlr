@@ -7,36 +7,43 @@
 getLearnerParVals(learner, for.fun = c("train", "predict", "both"))
 }
 \arguments{
-\item{learner}{[\code{\link{Learner}} | \code{character(1)}]\cr
+\item{learner}{(\link{Learner} | \code{character(1)})\cr
 The learner.
-If you pass a string the learner will be created via \code{\link{makeLearner}}.}
+If you pass a string the learner will be created via \link{makeLearner}.}
 
-\item{for.fun}{[\code{character(1)}]\cr
-Restrict the returned settings to hyperparameters corresponding to \code{when}
-the are used (see \code{\link[ParamHelpers]{LearnerParam}}).
-Must be a subset of: \dQuote{train}, \dQuote{predict} or \dQuote{both}.
-Default is \code{c("train", "predict", "both")}.}
+\item{for.fun}{(\code{character(1)})\cr Restrict the returned settings to
+hyperparameters corresponding to \code{when} the are used (see
+\link[ParamHelpers:LearnerParam]{ParamHelpers::LearnerParam}). Must be a subset of: \dQuote{train},
+\dQuote{predict} or \dQuote{both}. Default is \code{c("train", "predict", "both")}.}
 }
 \value{
-[\code{list}]. A named list of values.
+(\link{list}). A named list of values.
 }
 \description{
-Alias for \code{\link{getHyperPars}}.
+Alias for \link{getHyperPars}.
 }
 \seealso{
-Other learner: \code{\link{LearnerProperties}},
-  \code{\link{getClassWeightParam}},
-  \code{\link{getHyperPars}}, \code{\link{getLearnerId}},
-  \code{\link{getLearnerPackages}},
-  \code{\link{getLearnerParamSet}},
-  \code{\link{getLearnerPredictType}},
-  \code{\link{getLearnerShortName}},
-  \code{\link{getLearnerType}}, \code{\link{getParamSet}},
-  \code{\link{makeLearners}}, \code{\link{makeLearner}},
-  \code{\link{removeHyperPars}},
-  \code{\link{setHyperPars}}, \code{\link{setId}},
-  \code{\link{setLearnerId}},
-  \code{\link{setPredictThreshold}},
-  \code{\link{setPredictType}}
+Other learner: 
+\code{\link{LearnerProperties}},
+\code{\link{getClassWeightParam}()},
+\code{\link{getHyperPars}()},
+\code{\link{getLearnerId}()},
+\code{\link{getLearnerNote}()},
+\code{\link{getLearnerPackages}()},
+\code{\link{getLearnerParamSet}()},
+\code{\link{getLearnerPredictType}()},
+\code{\link{getLearnerShortName}()},
+\code{\link{getLearnerType}()},
+\code{\link{getParamSet}()},
+\code{\link{helpLearnerParam}()},
+\code{\link{helpLearner}()},
+\code{\link{makeLearners}()},
+\code{\link{makeLearner}()},
+\code{\link{removeHyperPars}()},
+\code{\link{setHyperPars}()},
+\code{\link{setId}()},
+\code{\link{setLearnerId}()},
+\code{\link{setPredictThreshold}()},
+\code{\link{setPredictType}()}
 }
-
+\concept{learner}

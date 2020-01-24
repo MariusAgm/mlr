@@ -9,17 +9,18 @@ makeRLearner.regr.lm = function() {
     ),
     properties = c("numerics", "factors", "se", "weights"),
     name = "Simple Linear Regression",
-    short.name = "lm"
+    short.name = "lm",
+    callees = c("lm", "lm.fit", "lm.wfit")
   )
 }
 
 #' @export
-trainLearner.regr.lm = function(.learner, .task, .subset, .weights = NULL,  ...) {
+trainLearner.regr.lm = function(.learner, .task, .subset, .weights = NULL, ...) {
   d = getTaskData(.task, .subset)
   if (is.null(.weights)) {
     f = getTaskFormula(.task)
     stats::lm(f, data = d, ...)
-  } else  {
+  } else {
     f = getTaskFormula(.task)
     stats::lm(f, data = d, weights = .weights, ...)
   }
